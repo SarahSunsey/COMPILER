@@ -16,7 +16,7 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 
 "BEGIN"         { return BEGINN; }
 "FLOAT"|"float" { return FLOATVAR; }
-"BOOL"|"bool"   {returnBOOLL ; }
+"BOOL"|"bool"   {return BOOLL ; }
 "true"|"false"  { return BOOL_VAL; }
 "STRING"|"string" { return STRING; }
 "int"|"INT"       { return INT; }
