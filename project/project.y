@@ -44,6 +44,7 @@ BOOLL { insert_type();  }
 |FLOATVAR { insert_type(); }
 |CHARR { insert_type(); }
 ;
+//  i think we do not have functions in our language !!
 return_type :INT|FLOATVAR|CHARR|VOID|BOOLL
 COMP:lt|gt|eq|eqeq|neq 
 unary:incr|decr
@@ -74,17 +75,23 @@ IDF2 eq VALUE virgule declarationCNST
 |IDF2 eq INT_NUM {} pvg 
 ;
 
-
+// handle identification of both Constants and Variables
+// var
 IDF:idf { add('V'); };
+// const
 IDF2:idf{add('C')}
 
 
-
+// declarationBOOL handles boolean declarations.
 declarationBOOL:IDF virgule declarationBOOL
 |IDF pvg
 |IDF eq BOOL_VAL {}  pvg
 ;
 
+
+//  programme defines the structure of a program, including variable assignments,
+//  printf statements, if-else constructs,
+//  while and do-while loops, unary operations, comments, and for loops.
 programme:
 IDF aff expression pvg 
 |PRINTFF {add('K');}'(' STR ')' pvg
@@ -97,16 +104,23 @@ IDF aff expression pvg
 |FOR {add('K');}'(' statement pvg condition pvg statement ')' '{' programme '}'
 |programme programme
 ;
-
+// statement defines different types of statements, including variable
+//  assignments and unary operations.
 statement :
 datatype IDF aff VALUE 
 | IDF aff expression
 |IDF unary
 |unary IDF
 ;
+
+// condition handles conditions, including comparisons and boolean literals.
+
 condition: IDF COMP expression 
 |BOOL_VAL
 ;
+
+// else handles the optional else part of an if-else construct.
+
 else: ELSE {add('K');} '{' programme '}'
 |
 ;
@@ -154,9 +168,8 @@ void add(char str) {
             symbol_table[count].id_name=strdup(yytext);
 			symbol_table[count].data_type=strdup(type);
 			symbol_table[count].line_no=nb_ligne;
-			symbol_table[count].type=strdup("Constante");
-            
-            symbol_table[count].ValNUm=ValNumerique;
+			symbol_table[count].type=strdup("Constante");      
+      symbol_table[count].ValNUm=ValNumerique;
 			count++;
     }
     else if(str == 'K') {
@@ -183,8 +196,7 @@ int search(char *name) {
 	return 0;
 }
 void afficher(){
- printf("\n\n");
-	
+  printf("\n\n");
 	printf("\nNAME           DATATYPE         TYPE        LINE NUMBER       \n");
 	printf("______________________________________________________________________\n\n");
 	int i=0;
