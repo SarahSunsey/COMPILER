@@ -10,18 +10,21 @@ extern char* yytext;
     void insert_type();
     void handleAffectation() ; 
     int search(char *);
-
+    void calculate_exp();
+    void addval(int x);
     struct dataType {
         char * id_name;
         char * data_type;
         char * type;
         int line_no;
         char * ValNUm;
+        char * str ;
        
     } symbol_table[100];
     int declarationPhase=1 ;
     int count=0;
     int q;
+    int y;
     char ValNumerique[10];
     char type[10];
     
@@ -79,7 +82,9 @@ IDF2 eq VALUE virgule declarationCNST
 
 // handle identification of both Constants and Variables
 // var
-IDF:idf { add('V'); };
+IDF:idf {y=search(strdup(yytext));
+printf("found here %d \n",y);
+ add('V'); };
 // const
 IDF2:idf{add('C')}
 
@@ -96,7 +101,9 @@ declarationBOOL:IDF virgule declarationBOOL
 //  while and do-while loops, unary operations, comments, and for loops.
 programme:
 // here you should check if it's a const
-IDF {handleAffectation();}  aff expression pvg 
+IDF {
+  handleAffectation();
+}  aff expression  pvg 
 |PRINTFF {add('K');}'(' STR ')' pvg
 | IF {add('K');}  '(' condition ')' '{' programme '}' else
 |WHILE {add('K');} '(' condition ')' '{' programme '}'
@@ -135,7 +142,7 @@ expression: term
 ;
 
 OP: min | pl | and | mul | orr
-VALUE: INT_NUM | FLOAT_NUM  |IDF |BOOL_VAL {}
+VALUE: INT_NUM {addval(y)}| FLOAT_NUM {addval(y)} |IDF  |BOOL_VAL {}
 
 /*
 function:
@@ -151,6 +158,11 @@ RETURN VALUE pvg
 ;
 */
 %%
+void addval(int x){
+  
+symbol_table[x].str=strdup(yytext);
+
+}
 void insert_type() {
 strcpy(type, yytext);
 }
@@ -166,6 +178,7 @@ void handleAffectation(){
     if( strcmp(strdup("Constante") ,symbol_table[q].type)==0){
       printf("%d symentic error -> affectation to const %s \n" , nb_ligne , symbol_table[q].id_name) ;
     } 
+    
   }
   // if(checkConst()){printf('Changement de valeur d’une constante')} ;
 }
@@ -231,7 +244,7 @@ void afficher(){
 	printf("______________________________________________________________________\n\n");
 	int i=0;
 	for(i=0; i<count; i++) {
-		printf("%s\t\t%s\t\t%s\t\t%d\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no);
+		printf("%s\t\t%s\t\t%s\t\t%d\t\t%s\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no,symbol_table[i].str);
 	}
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);

@@ -81,25 +81,28 @@ extern char* yytext;
     void insert_type();
     void handleAffectation() ; 
     int search(char *);
-
+    void calculate_exp();
+    void addval(int x);
     struct dataType {
         char * id_name;
         char * data_type;
         char * type;
         int line_no;
         char * ValNUm;
+        char * str ;
        
     } symbol_table[100];
     int declarationPhase=1 ;
     int count=0;
     int q;
+    int y;
     char ValNumerique[10];
     char type[10];
     
 
 
 /* Line 189 of yacc.c  */
-#line 103 "project.tab.c"
+#line 106 "project.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -195,7 +198,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 199 "project.tab.c"
+#line 202 "project.tab.c"
 
 #ifdef short
 # undef short
@@ -512,14 +515,14 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    42,    42,    43,    44,    45,    49,    49,    49,    49,
-      49,    50,    50,    52,    52,    55,    56,    59,    60,    60,
-      61,    61,    62,    62,    66,    67,    68,    70,    71,    72,
-      75,    76,    77,    77,    82,    84,    88,    89,    90,    90,
-      99,    99,   100,   100,   101,   101,   102,   102,   103,   103,
-     103,   104,   105,   106,   107,   107,   108,   113,   114,   115,
-     116,   121,   122,   127,   127,   128,   131,   132,   134,   137,
-     137,   137,   137,   137,   138,   138,   138,   138
+       0,    45,    45,    46,    47,    48,    52,    52,    52,    52,
+      52,    53,    53,    55,    55,    58,    59,    62,    63,    63,
+      64,    64,    65,    65,    69,    70,    71,    73,    74,    75,
+      78,    79,    80,    80,    85,    89,    93,    94,    95,    95,
+     104,   104,   107,   107,   108,   108,   109,   109,   110,   110,
+     110,   111,   112,   113,   114,   114,   115,   120,   121,   122,
+     123,   128,   129,   134,   134,   135,   138,   139,   141,   144,
+     144,   144,   144,   144,   145,   145,   145,   145
 };
 #endif
 
@@ -1538,161 +1541,179 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 42 "project.y"
+#line 45 "project.y"
     { insert_type();  ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 43 "project.y"
+#line 46 "project.y"
     { insert_type(); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 44 "project.y"
+#line 47 "project.y"
     { insert_type(); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 45 "project.y"
+#line 48 "project.y"
     { insert_type(); ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 52 "project.y"
+#line 55 "project.y"
     { declarationPhase  = 0 ;;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 52 "project.y"
+#line 55 "project.y"
     {printf("\nprogramme correct (syntaxiquement correcte)");;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 60 "project.y"
+#line 63 "project.y"
     { insert_type(); ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 61 "project.y"
+#line 64 "project.y"
     { insert_type(); ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 62 "project.y"
+#line 65 "project.y"
     { insert_type();  ;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 77 "project.y"
+#line 80 "project.y"
     {;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 82 "project.y"
-    { add('V'); ;}
+#line 85 "project.y"
+    {y=search(strdup(yytext));
+printf("found here %d \n",y);
+ add('V'); ;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 84 "project.y"
+#line 89 "project.y"
     {add('C');}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 90 "project.y"
+#line 95 "project.y"
     {;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 99 "project.y"
-    {handleAffectation();;}
+#line 104 "project.y"
+    {
+  handleAffectation();
+;}
     break;
 
   case 42:
-
-/* Line 1455 of yacc.c  */
-#line 100 "project.y"
-    {add('K');;}
-    break;
-
-  case 44:
-
-/* Line 1455 of yacc.c  */
-#line 101 "project.y"
-    {add('K');;}
-    break;
-
-  case 46:
-
-/* Line 1455 of yacc.c  */
-#line 102 "project.y"
-    {add('K');;}
-    break;
-
-  case 48:
-
-/* Line 1455 of yacc.c  */
-#line 103 "project.y"
-    {add('K');;}
-    break;
-
-  case 49:
-
-/* Line 1455 of yacc.c  */
-#line 103 "project.y"
-    {add('K');;}
-    break;
-
-  case 54:
 
 /* Line 1455 of yacc.c  */
 #line 107 "project.y"
     {add('K');;}
     break;
 
+  case 44:
+
+/* Line 1455 of yacc.c  */
+#line 108 "project.y"
+    {add('K');;}
+    break;
+
+  case 46:
+
+/* Line 1455 of yacc.c  */
+#line 109 "project.y"
+    {add('K');;}
+    break;
+
+  case 48:
+
+/* Line 1455 of yacc.c  */
+#line 110 "project.y"
+    {add('K');;}
+    break;
+
+  case 49:
+
+/* Line 1455 of yacc.c  */
+#line 110 "project.y"
+    {add('K');;}
+    break;
+
+  case 54:
+
+/* Line 1455 of yacc.c  */
+#line 114 "project.y"
+    {add('K');;}
+    break;
+
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 127 "project.y"
+#line 134 "project.y"
     {add('K');;}
+    break;
+
+  case 74:
+
+/* Line 1455 of yacc.c  */
+#line 145 "project.y"
+    {addval(y);}
+    break;
+
+  case 75:
+
+/* Line 1455 of yacc.c  */
+#line 145 "project.y"
+    {addval(y);}
     break;
 
   case 77:
 
 /* Line 1455 of yacc.c  */
-#line 138 "project.y"
+#line 145 "project.y"
     {;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1696 "project.tab.c"
+#line 1717 "project.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1904,8 +1925,13 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 153 "project.y"
+#line 160 "project.y"
 
+void addval(int x){
+  
+symbol_table[x].str=strdup(yytext);
+
+}
 void insert_type() {
 strcpy(type, yytext);
 }
@@ -1921,6 +1947,7 @@ void handleAffectation(){
     if( strcmp(strdup("Constante") ,symbol_table[q].type)==0){
       printf("%d symentic error -> affectation to const %s \n" , nb_ligne , symbol_table[q].id_name) ;
     } 
+    
   }
   // if(checkConst()){printf('Changement de valeur d’une constante')} ;
 }
@@ -1986,7 +2013,7 @@ void afficher(){
 	printf("______________________________________________________________________\n\n");
 	int i=0;
 	for(i=0; i<count; i++) {
-		printf("%s\t\t%s\t\t%s\t\t%d\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no);
+		printf("%s\t\t%s\t\t%s\t\t%d\t\t%s\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no,symbol_table[i].str);
 	}
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);
