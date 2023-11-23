@@ -164,7 +164,7 @@ void handleAffectation(){
   else{
     // printf("%d idf exist with index %d \n" , nb_ligne ,q) ;
     if( strcmp(strdup("Constante") ,symbol_table[q].type)==0){
-      printf("%d symentic error -> affectation to const \n" , nb_ligne) ;
+      printf("%d symentic error -> affectation to const %s \n" , nb_ligne , symbol_table[q].id_name) ;
     } 
   }
   // if(checkConst()){printf('Changement de valeur d’une constante')} ;
@@ -176,7 +176,7 @@ void add(char str) {
 
   if (q == -1) {
     if(declarationPhase ==0){
-      printf("%d symentic error -> idf not declared \n" ,nb_ligne ) ;
+      printf("%d symentic error -> idf not declared \n" ,nb_ligne) ;
     }
     if(str=='V' && declarationPhase==1){
       symbol_table[count].id_name=strdup(yytext);
@@ -205,7 +205,7 @@ void add(char str) {
   }
   else{
     if(declarationPhase==1){
-      printf("%d symentic error --> IDF already declared\n" , nb_ligne);
+      printf("line :%d symentic error --> IDF %s already declared\n" , nb_ligne , symbol_table[q].id_name);
     }
     
     // so here it does not mean it's symentic error if we didn't found it 
