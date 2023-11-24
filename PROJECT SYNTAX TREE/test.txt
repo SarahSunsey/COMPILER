@@ -1,4 +1,4 @@
-
+const float B=1.1,C=5,G=10;
 int A;
 BEGIN
 A := 3;

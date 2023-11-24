@@ -12,8 +12,7 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 
 
 %%
-"\".*\""       { return STR; }
-
+\".*\"      { return STR; }
 "BEGIN"         { return BEGINN; }
 "FLOAT"|"float" { return FLOATVAR; }
 "BOOL"|"bool"   {return BOOLL ; }

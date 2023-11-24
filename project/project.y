@@ -10,8 +10,7 @@ extern char* yytext;
     void insert_type();
     void handleAffectation() ; 
     int search(char *);
-    void calculate_exp();
-    void addval(int x);
+    void addval(int x,char * str);
     struct dataType {
         char * id_name;
         char * data_type;
@@ -22,12 +21,13 @@ extern char* yytext;
        
     } symbol_table[100];
     int declarationPhase=1 ;
+    char exp[30];
     int count=0;
     int q;
     int y;
     char ValNumerique[10];
     char type[10];
-    
+    int Affvar=-1;
 %}
 %token BEGINN aff pvg idf  cst  virgule
 %token FLOAT_NUM INT BOOLL STRING  BOOL_VAL CHARR VOID STR PRINTFF
@@ -41,6 +41,7 @@ extern char* yytext;
 
 %start S
 %%
+
 datatype:
 BOOLL { insert_type();  }
 |INT { insert_type(); }
@@ -77,16 +78,18 @@ declarationFLOAT:IDF virgule declarationFLOAT
 declarationCNST:
 IDF2 eq VALUE virgule declarationCNST
 |IDF2 pvg 
-|IDF2 eq INT_NUM {} pvg //here also , why CNST does not have Float ?
+|IDF2 eq VALUE  pvg //here also , why CNST does not have Float ?
 ;
 
 // handle identification of both Constants and Variables
 // var
-IDF:idf {y=search(strdup(yytext));
-printf("found here %d \n",y);
+IDF:idf { printf("y is %d\n",y);
+  y=search(strdup(yytext));
+
  add('V'); };
 // const
-IDF2:idf{add('C')}
+IDF2:idf{/*handleAffectation();*/
+  add('C');}
 
 
 // declarationBOOL handles boolean declarations.
@@ -102,8 +105,9 @@ declarationBOOL:IDF virgule declarationBOOL
 programme:
 // here you should check if it's a const
 IDF {
-  handleAffectation();
-}  aff expression  pvg 
+  handleAffectation(); }
+  aff expression { 
+    strcpy(exp,"");} pvg 
 |PRINTFF {add('K');}'(' STR ')' pvg
 | IF {add('K');}  '(' condition ')' '{' programme '}' else
 |WHILE {add('K');} '(' condition ')' '{' programme '}'
@@ -118,14 +122,14 @@ IDF {
 //  assignments and unary operations.
 statement :
 datatype IDF aff VALUE 
-| IDF aff expression
+| IDF aff expression1
 |IDF unary
 |unary IDF
 ;
 
 // condition handles conditions, including comparisons and boolean literals.
 
-condition: IDF COMP expression 
+condition: IDF COMP expression1 
 |BOOL_VAL
 ;
 
@@ -134,15 +138,25 @@ condition: IDF COMP expression
 else: ELSE {add('K');} '{' programme '}'
 |
 ;
+term: expression OP1 term
+|VALUE1
+;
+expression: term 
+;
 
-term: expression OP term
+term2: expression OP term2
 |VALUE
 ;
-expression: term
+expression1: term2 
 ;
 
+
 OP: min | pl | and | mul | orr
-VALUE: INT_NUM {addval(y)}| FLOAT_NUM {addval(y)} |IDF  |BOOL_VAL {}
+VALUE: INT_NUM | FLOAT_NUM |idf |BOOL_VAL
+
+OP1: min {strcat(exp, yytext);} | pl {strcat(exp, yytext);}| and {strcat(exp, yytext);}| mul {strcat(exp, yytext);}| orr
+VALUE1: INT_NUM {strcat(exp, yytext);
+addval(y,exp);}| FLOAT_NUM {strcat(exp, yytext);addval(y,exp);} |IDF {strcat(exp, yytext);addval(y,exp);}  |BOOL_VAL {strcat(exp, yytext);addval(y,exp);}
 
 /*
 function:
@@ -158,9 +172,9 @@ RETURN VALUE pvg
 ;
 */
 %%
-void addval(int x){
-  
-symbol_table[x].str=strdup(yytext);
+void addval(int x,char * str){
+printf("on ajoute a la ligne  %d  dans la table des symbole ligne %d la valeur : %s \n ",nb_ligne,y,str);
+symbol_table[Affvar].str=strdup(str);
 
 }
 void insert_type() {
@@ -170,10 +184,13 @@ strcpy(type, yytext);
   
 // }
 void handleAffectation(){
- 
+    
   search(yytext);
-  if(q==-1) printf("%d erreur symentic cannot affect data to null \n" , nb_ligne);
+  if(q==-1) {
+    Affvar = -1;
+    printf("%d erreur symentic cannot affect data to null \n" , nb_ligne);}
   else{
+    Affvar =q;
     // printf("%d idf exist with index %d \n" , nb_ligne ,q) ;
     if( strcmp(strdup("Constante") ,symbol_table[q].type)==0){
       printf("%d symentic error -> affectation to const %s \n" , nb_ligne , symbol_table[q].id_name) ;
@@ -185,8 +202,6 @@ void handleAffectation(){
 // here fixed , adding to symbolic table only idf's in the declaration phase and keywords  
 void add(char str) {
   q=search(yytext);
-
-
   if (q == -1) {
     if(declarationPhase ==0){
       printf("%d symentic error -> idf not declared \n" ,nb_ligne) ;
