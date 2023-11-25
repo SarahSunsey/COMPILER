@@ -1,5 +1,12 @@
-
-int A;
+float A;
+const int B=2,S=1;
+const float B=1.1,C=5,G=10;
+int A_abb , C , A80 ;
+const bool Fl;
+BOOL FLL;
+FLOAT K,L,O;
+const bool Ma ;
+const float W = 32;
 BEGIN
 A := 3;
 A := B + 4;
@@ -10,7 +17,7 @@ for(I:=0;I<5;I++){
     for(I:=0;I<5;I++)
     {C := 4 + 5 + 3;
     }
-    if(I==1+Y-H){
+    if(I==1+Y+H){
         C := 4 + 5 + 3;
     }
     else {
@@ -22,5 +29,16 @@ for(I:=0;I<5;I++){
     for(I:=0;I<5;I++){
         C := 4 + 5 + 3;
     }
+/* hey */
+do {
 
+    A := A +1 ;
+    I++;
+    for(I:=0;I<5;I++)
+    {C := 4 + 5 + 3;
+    }
+} while (I < 5)
+while (I < 5) {
+    I := I +1 ;
+}
 END

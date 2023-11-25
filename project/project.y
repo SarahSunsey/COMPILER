@@ -3,12 +3,15 @@
 int nb_ligne=1;
   int yylex();
   int yywrap();
-
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_PINK    "\x1b[38;2;255;182;193m"    
+#define ANSI_COLOR_RESET   "\x1b[0m"
 extern void yyerror(const char* msg);
 extern char* yytext;
     void add(char);
     void insert_type();
     void handleAffectation() ; 
+    void handleDecCst(char * cst);
     int search(char *);
     void addval(int x,char * str);
     struct dataType {
@@ -27,6 +30,7 @@ extern char* yytext;
     int y;
     char ValNumerique[10];
     char type[10];
+    char decCST[10];
     int Affvar=-1;
 %}
 %token BEGINN aff pvg idf  cst  virgule
@@ -76,21 +80,22 @@ declarationFLOAT:IDF virgule declarationFLOAT
 |IDF eq FLOAT_NUM  pvg // here when you add an FLOAT_NUM  you should add a checker 
 ;
 declarationCNST:
-IDF2 eq VALUE virgule declarationCNST
+IDF2 eq VALUEcst virgule declarationCNST
 |IDF2 pvg 
-|IDF2 eq VALUE  pvg //here also , why CNST does not have Float ?
+|IDF2 eq VALUEcst  pvg //here also , why CNST does not have Float ?
 ;
 
 // handle identification of both Constants and Variables
 // var
-IDF:idf { printf("y is %d\n",y);
-  y=search(strdup(yytext));
-
+IDF:idf {
  add('V'); };
 // const
-IDF2:idf{/*handleAffectation();*/
-  add('C');}
-
+IDF2:idf{ add('C');strcpy(decCST,yytext);}
+VALUEcst: INT_NUM  {
+  handleDecCst(decCST);
+}| FLOAT_NUM {handleDecCst(decCST);} 
+|idf {handleDecCst(decCST);} 
+|BOOL_VAL{handleDecCst(decCST);}
 
 // declarationBOOL handles boolean declarations.
 declarationBOOL:IDF virgule declarationBOOL
@@ -173,7 +178,7 @@ RETURN VALUE pvg
 */
 %%
 void addval(int x,char * str){
-printf("on ajoute a la ligne  %d  dans la table des symbole ligne %d la valeur : %s \n ",nb_ligne,y,str);
+
 symbol_table[Affvar].str=strdup(str);
 
 }
@@ -183,17 +188,21 @@ strcpy(type, yytext);
 // bool checkConst(){
   
 // }
+void handleDecCst(char * cst){
+  q=search(cst);
+  symbol_table[q].str=strdup(yytext);
+}
 void handleAffectation(){
     
   search(yytext);
   if(q==-1) {
     Affvar = -1;
-    printf("%d erreur symentic cannot affect data to null \n" , nb_ligne);}
+    }
   else{
     Affvar =q;
     // printf("%d idf exist with index %d \n" , nb_ligne ,q) ;
     if( strcmp(strdup("Constante") ,symbol_table[q].type)==0){
-      printf("%d symentic error -> affectation to const %s \n" , nb_ligne , symbol_table[q].id_name) ;
+      printf("%d symentic error -> affectation to const "ANSI_COLOR_PINK  " %s "ANSI_COLOR_RESET " \n\n" , nb_ligne , symbol_table[q].id_name) ;
     } 
     
   }
@@ -204,7 +213,7 @@ void add(char str) {
   q=search(yytext);
   if (q == -1) {
     if(declarationPhase ==0){
-      printf("%d symentic error -> idf not declared \n" ,nb_ligne) ;
+      printf("%d symentic error -> idf"ANSI_COLOR_PINK  " %s "ANSI_COLOR_RESET "not declared \n\n" ,nb_ligne,yytext) ;
     }
     if(str=='V' && declarationPhase==1){
       symbol_table[count].id_name=strdup(yytext);
@@ -255,8 +264,8 @@ int search(char* name) {
 
 void afficher(){
   printf("\n\n");
-	printf("\nNAME           DATATYPE         TYPE        LINE NUMBER       \n");
-	printf("______________________________________________________________________\n\n");
+	printf(ANSI_COLOR_YELLOW "\nNAME           DATATYPE         TYPE        LINE NUMBER           VALUE   \n"ANSI_COLOR_RESET);
+	printf("________________________________________________________________________________\n\n");
 	int i=0;
 	for(i=0; i<count; i++) {
 		printf("%s\t\t%s\t\t%s\t\t%d\t\t%s\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no,symbol_table[i].str);
