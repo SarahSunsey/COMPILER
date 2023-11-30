@@ -7,6 +7,7 @@ int nb_ligne=1;
 #define ANSI_COLOR_PINK    "\x1b[38;2;255;182;193m"    
 #define ANSI_COLOR_RESET   "\x1b[0m"
 extern void yyerror(const char* msg);
+extern void insert(char* str,char* strg);
 extern char* yytext;
     void add(char);
     void insert_type();
@@ -19,7 +20,7 @@ extern char* yytext;
         char * data_type;
         char * type;
         int line_no;
-        char * ValNUm;
+        char * ValNUm ;
         char * str ;
        
     } symbol_table[100];
@@ -32,10 +33,16 @@ extern char* yytext;
     char type[10];
     char decCST[10];
     int Affvar=-1;
+   
 %}
-%token BEGINN aff pvg idf  cst  virgule
-%token FLOAT_NUM INT BOOLL STRING  BOOL_VAL CHARR VOID STR PRINTFF
-%token INT_NUM FLOATVAR real charr string BOOL_VAR
+%union {
+int int_val;
+double double_val;
+char* string;
+}
+%token BEGINN aff pvg <string> idf  cst  virgule
+%token <double_val>FLOAT_NUM INT BOOLL STRING  BOOL_VAL CHARR VOID STR PRINTFF
+%token <int_val>INT_NUM  FLOATVAR real charr string BOOL_VAR
 %token commentaire seulcommentaire
 %token lt gt eq eqeq neq 
 %token pl min and mul orr 
@@ -46,16 +53,6 @@ extern char* yytext;
 %start S
 %%
 
-datatype:
-BOOLL { insert_type();  }
-|INT { insert_type(); }
-|FLOATVAR { insert_type(); }
-|CHARR { insert_type(); }
-;
-//  i think we do not have functions in our language !!
-return_type :INT|FLOATVAR|CHARR|VOID|BOOLL
-COMP:lt|gt|eq|eqeq|neq 
-unary:incr|decr
 
 S: declarations   BEGINN { declarationPhase  = 0 ;} programme ENDD {printf("\nprogramme correct (syntaxiquement correcte)");}
 ;
@@ -73,16 +70,16 @@ declaration:cst  datatype declarationCNST
 // when declaring an IDF check previous IDF's on symbolic table , if it's exist so double declare
 declarationENTIER:IDF virgule declarationENTIER
 |IDF  pvg 
-|IDF eq INT_NUM  pvg // here when you add an INT_NUM  you should add a checker 
+//|IDF eq INT_NUM  pvg // here when you add an INT_NUM  you should add a checker 
 ;
 declarationFLOAT:IDF virgule declarationFLOAT
 |IDF pvg
-|IDF eq FLOAT_NUM  pvg // here when you add an FLOAT_NUM  you should add a checker 
+//|IDF eq FLOAT_NUM  pvg // here when you add an FLOAT_NUM  you should add a checker 
 ;
 declarationCNST:
 IDF2 eq VALUEcst virgule declarationCNST
 |IDF2 pvg 
-|IDF2 eq VALUEcst  pvg //here also , why CNST does not have Float ?
+|IDF2 eq VALUEcst  pvg 
 ;
 
 // handle identification of both Constants and Variables
@@ -91,6 +88,7 @@ IDF:idf {
  add('V'); };
 // const
 IDF2:idf{ add('C');strcpy(decCST,yytext);}
+
 VALUEcst: INT_NUM  {
   handleDecCst(decCST);
 }| FLOAT_NUM {handleDecCst(decCST);} 
@@ -155,6 +153,16 @@ term2: expression OP term2
 expression1: term2 
 ;
 
+datatype:
+BOOLL { insert_type();  }
+|INT { insert_type(); }
+|FLOATVAR { insert_type(); }
+|CHARR { insert_type(); }
+;
+//  i think we do not have functions in our language !!
+return_type :INT|FLOATVAR|CHARR|VOID|BOOLL
+COMP:lt|gt|eq|eqeq|neq 
+unary:incr|decr
 
 OP: min | pl | and | mul | orr
 VALUE: INT_NUM | FLOAT_NUM |idf |BOOL_VAL
@@ -177,8 +185,12 @@ RETURN VALUE pvg
 ;
 */
 %%
+void insert(char * str,char *string){
+  
+   symbol_table[count].id_name=strdup(yytext);
+   symbol_table[count].data_type=string;
+}
 void addval(int x,char * str){
-
 symbol_table[Affvar].str=strdup(str);
 
 }
@@ -211,32 +223,34 @@ void handleAffectation(){
 // here fixed , adding to symbolic table only idf's in the declaration phase and keywords  
 void add(char str) {
   q=search(yytext);
-  if (q == -1) {
-    if(declarationPhase ==0){
+  
+  if (q==-1) {
+    if(declarationPhase ==0 && str!='K'){
       printf("%d symentic error -> idf"ANSI_COLOR_PINK  " %s "ANSI_COLOR_RESET "not declared \n\n" ,nb_ligne,yytext) ;
     }
     if(str=='V' && declarationPhase==1){
-      symbol_table[count].id_name=strdup(yytext);
 			symbol_table[count].data_type=strdup(type);
 			symbol_table[count].line_no=nb_ligne;
 			symbol_table[count].type=strdup("Variable");
-            
+      symbol_table[count].str="/";
  
 			count++;
     }
     else if(str=='C' && declarationPhase==1){
-      symbol_table[count].id_name=strdup(yytext);
+      
 			symbol_table[count].data_type=strdup(type);
 			symbol_table[count].line_no=nb_ligne;
 			symbol_table[count].type=strdup("Constante");      
       symbol_table[count].ValNUm=ValNumerique;
+      symbol_table[count].str="/";
 			count++;
     }
     else if(str == 'K') {
-			symbol_table[count].id_name=strdup(yytext);
+			
 			symbol_table[count].data_type=strdup("N/A");
 			symbol_table[count].line_no=nb_ligne;
 			symbol_table[count].type=strdup("Keyword\t");
+      symbol_table[count].str="/";
 			count++;
 		}
   }
@@ -256,6 +270,7 @@ int search(char* name) {
    
     for (i = 0; i <= count-1; i++) {
         if (strcmp(symbol_table[i].id_name, name) == 0) {
+          if(symbol_table[i].str=="0") symbol_table[i].ValNUm='/';
             return i;  // Return the index of the found identifier
         }
     }

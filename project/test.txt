@@ -1,7 +1,9 @@
 float A;
+int I;
+
 const int B=2,S=1;
 const float B=1.1,C=5,G=10;
-int A_abb , C , A80 ;
+int A_abb  , A80 ;
 const bool Fl;
 BOOL FLL;
 FLOAT K,L,O;
@@ -17,7 +19,7 @@ for(I:=0;I<5;I++){
     for(I:=0;I<5;I++)
     {C := 4 + 5 + 3;
     }
-    if(I==1+Y+H){
+    if(I == 1 + Y + H){
         C := 4 + 5 + 3;
     }
     else {

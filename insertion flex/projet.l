@@ -2,7 +2,6 @@
 #include "project.tab.h"
 #include <stdio.h>
 extern nb_ligne;
-extern YYSTYPE yylval;
 %}
 %option yylineno
 IDF [A-Z]+[A-Za-z0-9]*(_[A-Za-z0-9]+)*
@@ -14,7 +13,7 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 
 %%
 \".*\"      { return STR; }
-"BEGIN"         { return BEGINN; yylval.string=strdup(yytext); insert(yytext,"keyword"); }
+"BEGIN"         { return BEGINN; }
 "FLOAT"|"float" { return FLOATVAR; }
 "BOOL"|"bool"   {return BOOLL ; }
 "true"|"false"  { return BOOL_VAL; }
@@ -24,18 +23,17 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 "END"            { return ENDD; }
 "CHAR"|"char"    { return CHARR; }
 "void"|"VOID"    { return VOID; }
-"for"            {  yylval.string=strdup(yytext); insert(yytext,"keyword");return FOR;}
-"if"             { yylval.string=strdup(yytext); insert(yytext,"keyword");return IF; }
-"else"           { yylval.string=strdup(yytext); insert(yytext,"keyword");return ELSE; }
-"printf"         { yylval.string=strdup(yytext); insert(yytext,"keyword"); return PRINTFF;}
-"while"          {yylval.string=strdup(yytext); insert(yytext,"keyword"); return WHILE; }
-"do"             { yylval.string=strdup(yytext); insert(yytext,"keyword");return DO; }
-"function"       {  yylval.string=strdup(yytext); insert(yytext,"keyword");return FUNCTIONN;}
+"for"            { return FOR; }
+"if"             { return IF; }
+"else"           { return ELSE; }
+"printf"         { return PRINTFF; }
+"while"          { return WHILE; }
+"do"             { return DO; }
+"function"       { return FUNCTIONN; }
 
-{IDF} { if (strlen(yytext) <= 10 && yytext[strlen(yytext)-1] != '_') 
-{yylval.string=strdup(yytext); insert(yytext,"idf");return idf; }}
-{INTNUM}       { yylval.int_val   = atoi(yytext); return INT_NUM;}
-{float}         {yylval.double_val = atof(yytext);  return FLOAT_NUM;}
+{IDF} { if (strlen(yytext) <= 10 && yytext[strlen(yytext)-1] != '_') {yylval.string=strdup(yytext); insert(yytext,"idf"); return idf; }}
+{INTNUM}       {return INT_NUM;}
+{float}         { return FLOAT_NUM;}
 {commentaire}       {return commentaire;}
 
 "("     { return '('; }
