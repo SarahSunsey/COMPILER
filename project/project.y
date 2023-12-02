@@ -205,8 +205,9 @@ void insert(char * str,char *string){
 }
 double evaluateExpression(char* expression) {
     char* endptr;  
+    printf( " %d Expression  %s : \n"  , nb_ligne , expression ) ; 
     double result = strtod(expression, &endptr);
-
+    printf("%c endptr : \n" ,endptr) ;
     // Check if the entire expression was a valid number
     if (*endptr == '\0') {
         return result;
@@ -216,15 +217,15 @@ double evaluateExpression(char* expression) {
         return -1.0; // Indicate an error
     }
 }
+// flaot  to int ? 
 void addval(int x,char * str){
-  
- double result = evaluateExpression(str);
-    
-    if (result != -1.0) {
-        printf("Result: %lf\n", result);
-    }
-    snprintf(tempStr, sizeof(tempStr), "%lf", result);
-symbol_table[Affvar].str=strdup(tempStr);
+  // printf('expression String' , str)
+  double result = evaluateExpression(str);
+  if (result != -1.0) {
+   printf("Result: %lf\n", result);
+  }
+  snprintf(tempStr, sizeof(tempStr), "%lf", result);
+  symbol_table[Affvar].str=strdup(tempStr);
 
 }
 void insert_type() {
