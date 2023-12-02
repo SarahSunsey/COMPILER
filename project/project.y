@@ -1,5 +1,7 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 int nb_ligne=1;
   int yylex();
   int yywrap();
@@ -7,6 +9,10 @@ int nb_ligne=1;
 #define ANSI_COLOR_PINK    "\x1b[38;2;255;182;193m"    
 #define ANSI_COLOR_RESET   "\x1b[0m"
 extern void yyerror(const char* msg);
+char* endptr;
+double result;
+char tempStr[20];
+double evaluateExpression(char* expression);
 extern void insert(char* str,char* strg);
 extern char* yytext;
     void add(char);
@@ -54,7 +60,7 @@ char* string;
 %%
 
 
-S: declarations   BEGINN { declarationPhase  = 0 ;} programme ENDD {printf("\nprogramme correct (syntaxiquement correcte)");}
+S: declarations   BEGINN  { declarationPhase  = 0 ; add('K'); } programme ENDD   { add('K'); printf("\nprogramme correct (syntaxiquement correcte)");}
 ;
 
 declarations: declaration declarations 
@@ -62,11 +68,18 @@ declarations: declaration declarations
 ;
 
 declaration:cst  datatype declarationCNST 
+|CHARR { insert_type(); } declarationCHAR
+|STRING { insert_type(); } declarationSTRING
 |INT { insert_type(); } declarationENTIER
 |FLOATVAR { insert_type(); } declarationFLOAT
 |BOOLL { insert_type();  } declarationBOOL
 ;
 
+declarationCHAR: IDF virgule declarationCHAR
+|IDF pvg
+;
+declarationSTRING:IDF virgule declarationSTRING
+|IDF pvg;
 // when declaring an IDF check previous IDF's on symbolic table , if it's exist so double declare
 declarationENTIER:IDF virgule declarationENTIER
 |IDF  pvg 
@@ -190,8 +203,28 @@ void insert(char * str,char *string){
    symbol_table[count].id_name=strdup(yytext);
    symbol_table[count].data_type=string;
 }
+double evaluateExpression(char* expression) {
+    char* endptr;  
+    double result = strtod(expression, &endptr);
+
+    // Check if the entire expression was a valid number
+    if (*endptr == '\0') {
+        return result;
+    } else {
+        // If not, print an error or handle it as needed
+        printf("Error: Malformed expression\n");
+        return -1.0; // Indicate an error
+    }
+}
 void addval(int x,char * str){
-symbol_table[Affvar].str=strdup(str);
+  
+ double result = evaluateExpression(str);
+    
+    if (result != -1.0) {
+        printf("Result: %lf\n", result);
+    }
+    snprintf(tempStr, sizeof(tempStr), "%lf", result);
+symbol_table[Affvar].str=strdup(tempStr);
 
 }
 void insert_type() {

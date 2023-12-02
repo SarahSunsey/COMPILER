@@ -1,6 +1,7 @@
 float A;
 int I;
-
+char Y;
+string K;
 const int B=2,S=1;
 const float B=1.1,C=5,G=10;
 int A_abb  , A80 ;

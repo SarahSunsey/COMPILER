@@ -14,14 +14,14 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 
 %%
 \".*\"      { return STR; }
-"BEGIN"         { return BEGINN; yylval.string=strdup(yytext); insert(yytext,"keyword"); }
+"BEGIN"         {  yylval.string=strdup(yytext); insert(yytext,"keyword");return BEGINN; }
 "FLOAT"|"float" { return FLOATVAR; }
 "BOOL"|"bool"   {return BOOLL ; }
 "true"|"false"  { return BOOL_VAL; }
 "STRING"|"string" { return STRING; }
 "int"|"INT"       { return INT; }
 "CONST"|"const"   { return cst; }
-"END"            { return ENDD; }
+"END"            { yylval.string=strdup(yytext); insert(yytext,"keyword"); return ENDD; }
 "CHAR"|"char"    { return CHARR; }
 "void"|"VOID"    { return VOID; }
 "for"            {  yylval.string=strdup(yytext); insert(yytext,"keyword");return FOR;}

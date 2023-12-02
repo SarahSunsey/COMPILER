@@ -778,7 +778,7 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 17 "project.l"
-{ return BEGINN; yylval.string=strdup(yytext); insert(yytext,"keyword"); }
+{  yylval.string=strdup(yytext); insert(yytext,"keyword");return BEGINN; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -813,7 +813,7 @@ YY_RULE_SETUP
 case 9:
 YY_RULE_SETUP
 #line 24 "project.l"
-{ return ENDD; }
+{ yylval.string=strdup(yytext); insert(yytext,"keyword"); return ENDD; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP

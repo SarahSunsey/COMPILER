@@ -4,6 +4,9 @@ int nb_ligne=1;
   int yylex();
   int yywrap();
 extern char* yytext;
+void printtree(struct node*);
+void printInorder(struct node *);
+struct node* mknode(struct node *left, struct node *right, char *token);
 extern void yyerror(const char* msg);
 extern char* yytext;
     void add(char);
@@ -24,8 +27,20 @@ extern char* yytext;
     int q;
     char ValNumerique[10];
     char type[10];
+     struct node *head;
+    struct node { 
+	struct node *left; 
+	struct node *right; 
+	char *token; 
+    };
     
 %}
+%union { 
+	struct var_name { 
+		char name[100]; 
+		struct node* nd;
+	} nd_obj; 
+} 
 %token BEGINN aff pvg idf  cst  virgule
 %token FLOAT_NUM INT BOOLL STRING  BOOL_VAL CHARR VOID STR PRINTFF
 %token INT_NUM FLOATVAR real charr string BOOL_VAR
