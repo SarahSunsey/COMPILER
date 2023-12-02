@@ -49,6 +49,101 @@ double pop(Stack* stack) {
     return -1; // Error: Stack is empty
 }
 
+// Structure to represent a character stack
+typedef struct {
+    int top;
+    char* array;
+} CharStack;
+
+void printCharStack(CharStack* stack) {
+    if (isEmptyChar(stack)) {
+        printf("Stack is empty\n");
+        return;
+    }
+
+    printf("Stack contents: ");
+    int i;
+    for (i = 0; i <= stack->top; ++i) {
+        printf("%c ", stack->array[i]);
+    }
+    printf("\n");
+}
+
+// Initialize a character stack
+CharStack* initializeCharStack(int size) {
+    CharStack* stack = (CharStack*)malloc(sizeof(CharStack));
+    stack->top = -1;
+    stack->array = (char*)malloc(size * sizeof(char));
+    return stack;
+}
+
+// Check if the character stack is empty
+int isEmptyChar(CharStack* stack) {
+    return stack->top == -1;
+}
+
+// Push a character onto the character stack
+void pushChar(CharStack* stack, char item) {
+    stack->array[++stack->top] = item;
+}
+
+// Pop a character from the character stack
+char popChar(CharStack* stack) {
+    if (!isEmptyChar(stack)) {
+        return stack->array[stack->top--];
+    }
+    return '\0'; // Error: Stack is empty
+}
+
+// Get the precedence of an operator
+int getPrecedence(char operator) {
+    if (operator == '+' || operator == '-')
+        return 1;
+    else if (operator == '*' || operator == '/')
+        return 2;
+    return 0; // For parentheses or other characters
+}
+
+// Convert infix expression to postfix
+void infixToPostfix(char* infix, char* postfix) {
+    CharStack* stack = initializeCharStack(strlen(infix));
+    int i, j = 0;
+
+    for (i = 0; infix[i]; ++i) {
+        if (isdigit(infix[i])) {
+            while (isdigit(infix[i])) {
+                postfix[j++] = infix[i++];
+            }
+            postfix[j++] = ' ';
+            --i;
+        } else if (infix[i] == '(') {
+            pushChar(stack, infix[i]);
+        } else if (infix[i] == ')') {
+            while (!isEmptyChar(stack) && stack->array[stack->top] != '(') {
+                postfix[j++] = popChar(stack);
+                postfix[j++] = ' ';
+            }
+            popChar(stack); // Pop the '('
+        } else if (infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/') {
+            while (!isEmptyChar(stack) && getPrecedence(infix[i]) <= getPrecedence(stack->array[stack->top])) {
+                postfix[j++] = popChar(stack);
+                postfix[j++] = ' ';
+            }
+            pushChar(stack, infix[i]);
+        }
+    }
+
+    while (!isEmptyChar(stack)) {
+        postfix[j++] = popChar(stack);
+        postfix[j++] = ' ';
+    }
+
+    postfix[j] = '\0';
+
+    free(stack->array);
+    free(stack);
+}
+
 // Function to evaluate an expression
 double evaluateExpression(char* expression) {
     Stack* stack = initializeStack(strlen(expression));
@@ -63,28 +158,17 @@ double evaluateExpression(char* expression) {
             }
             --i;
             push(stack, operand);
-            printf("firstOperand : %lf" , operand); 
+            printf("firstOperand : %lf", operand);
             printStack(stack);
         } else if (expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/') {
             double operand2 = pop(stack);
-            double operand1=pop(stack);
-
-            // if (isEmpty(stack)) {
-            //     // Handle the case when the stack is empty
-            //     if (expression[i] == '+' || expression[i] == '-') {
-            //         operand1 = 0;
-            //     } else {
-            //         operand1 = 1;
-            //     }
-            // } else {
-            //     operand1 = pop(stack);
-            // }
+            double operand1 = pop(stack);
 
             printStack(stack);
 
             switch (expression[i]) {
                 case '+':
-                    printf("%lf + %lf = %lf\n" ,operand1 , operand2 ,operand1 + operand2) ; 
+                    printf("%lf + %lf = %lf\n", operand1, operand2, operand1 + operand2);
                     push(stack, operand1 + operand2);
                     break;
                 case '-':
@@ -125,6 +209,7 @@ double evaluateExpression(char* expression) {
 
 int main() {
     char expression[100];
+    char postfixExpression[100];
 
     printf("Enter a mathematical expression: ");
     if (fgets(expression, sizeof(expression), stdin) != NULL) {
@@ -134,7 +219,12 @@ int main() {
             *newline = '\0';
         }
 
-        double result = evaluateExpression(expression);
+        infixToPostfix(expression, postfixExpression);
+
+        printf("Infix Expression: %s\n", expression);
+        printf("Postfix Expression: %s\n", postfixExpression);
+
+        double result = evaluateExpression(postfixExpression);
 
         if (result != -1) {
             printf("Result: %lf\n", result);
