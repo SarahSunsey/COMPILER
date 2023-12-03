@@ -1,8 +1,7 @@
-float A;
+int A;
 float B; 
 BEGIN
 A := 3;
 B:=3 ; 
 A := 3 + 4;
-
 END

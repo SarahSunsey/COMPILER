@@ -83,6 +83,29 @@ extern void yyerror(const char* msg);
 char* endptr;
 double result;
 char tempStr[20];
+char postfixExpression[100];
+typedef struct {
+    int top;
+    double* array;
+} Stack;
+
+void printStack(Stack* stack);
+Stack* initializeStack(int size);
+int isEmpty(Stack* stack);
+void push(Stack* stack, double item);
+double pop(Stack* stack);
+typedef struct {
+    int top;
+    char* array;
+} CharStack;
+
+void printCharStack(CharStack* stack);
+CharStack* initializeCharStack(int size);
+int isEmptyChar(CharStack* stack) ;
+void pushChar(CharStack* stack, char item);
+char popChar(CharStack* stack);
+int getPrecedence(char operatorr);
+void infixToPostfix(char* infix, char* postfix);
 double evaluateExpression(char* expression);
 extern void insert(char* str,char* strg);
 extern char* yytext;
@@ -97,9 +120,9 @@ extern char* yytext;
         char * data_type;
         char * type;
         int line_no;
-        char * ValNUm ;
+        double ValNUm ;
         char * str ;
-       
+        
     } symbol_table[100];
     int declarationPhase=1 ;
     char exp[30];
@@ -114,7 +137,7 @@ extern char* yytext;
 
 
 /* Line 189 of yacc.c  */
-#line 118 "project.tab.c"
+#line 141 "project.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -203,7 +226,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 44 "project.y"
+#line 67 "project.y"
 
 int int_val;
 double double_val;
@@ -212,7 +235,7 @@ char* string;
 
 
 /* Line 214 of yacc.c  */
-#line 216 "project.tab.c"
+#line 239 "project.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -224,7 +247,7 @@ char* string;
 
 
 /* Line 264 of yacc.c  */
-#line 228 "project.tab.c"
+#line 251 "project.tab.c"
 
 #ifdef short
 # undef short
@@ -548,16 +571,16 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    63,    63,    63,    66,    67,    70,    71,    71,    72,
-      72,    73,    73,    74,    74,    75,    75,    78,    79,    81,
-      82,    84,    85,    88,    89,    93,    94,    95,   100,   103,
-     105,   107,   108,   109,   112,   113,   114,   114,   123,   125,
-     123,   127,   127,   128,   128,   129,   129,   130,   130,   130,
-     131,   132,   133,   134,   134,   135,   140,   141,   142,   143,
-     148,   149,   154,   154,   155,   157,   158,   160,   163,   164,
-     166,   170,   171,   172,   173,   177,   177,   177,   177,   177,
-     178,   178,   180,   180,   180,   180,   180,   181,   181,   181,
-     181,   183,   183,   183,   183,   183,   184,   185,   185,   185
+       0,    86,    86,    86,    89,    90,    93,    94,    94,    95,
+      95,    96,    96,    97,    97,    98,    98,   101,   102,   104,
+     105,   107,   108,   111,   112,   116,   117,   118,   123,   126,
+     128,   130,   131,   132,   135,   136,   137,   137,   146,   148,
+     146,   150,   150,   151,   151,   152,   152,   153,   153,   153,
+     154,   155,   156,   157,   157,   158,   163,   164,   165,   166,
+     171,   172,   177,   177,   178,   180,   181,   183,   186,   187,
+     189,   193,   194,   195,   196,   200,   200,   200,   200,   200,
+     201,   201,   203,   203,   203,   203,   203,   204,   204,   204,
+     204,   206,   206,   206,   206,   206,   207,   208,   208,   208
 };
 #endif
 
@@ -1599,56 +1622,56 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 63 "project.y"
+#line 86 "project.y"
     { declarationPhase  = 0 ; add('K'); ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 63 "project.y"
+#line 86 "project.y"
     { add('K'); printf("\nprogramme correct (syntaxiquement correcte)");;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 71 "project.y"
+#line 94 "project.y"
     { insert_type(); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 72 "project.y"
+#line 95 "project.y"
     { insert_type(); ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 73 "project.y"
+#line 96 "project.y"
     { insert_type(); ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 74 "project.y"
+#line 97 "project.y"
     { insert_type(); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 75 "project.y"
+#line 98 "project.y"
     { insert_type();  ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 100 "project.y"
+#line 123 "project.y"
     {
  add('V'); ;}
     break;
@@ -1656,14 +1679,14 @@ yyreduce:
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 103 "project.y"
+#line 126 "project.y"
     { add('C');strcpy(decCST,yytext);;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 105 "project.y"
+#line 128 "project.y"
     {
   handleDecCst(decCST);
 ;}
@@ -1672,35 +1695,35 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 107 "project.y"
+#line 130 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 108 "project.y"
+#line 131 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 109 "project.y"
+#line 132 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 114 "project.y"
+#line 137 "project.y"
     {;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 123 "project.y"
+#line 146 "project.y"
     {
   handleAffectation(); ;}
     break;
@@ -1708,7 +1731,7 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 125 "project.y"
+#line 148 "project.y"
     { 
     strcpy(exp,"");;}
     break;
@@ -1716,112 +1739,112 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 127 "project.y"
+#line 150 "project.y"
     {add('K');;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 128 "project.y"
+#line 151 "project.y"
     {add('K');;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 129 "project.y"
+#line 152 "project.y"
     {add('K');;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 130 "project.y"
+#line 153 "project.y"
     {add('K');;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 130 "project.y"
+#line 153 "project.y"
     {add('K');;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 134 "project.y"
+#line 157 "project.y"
     {add('K');;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 154 "project.y"
+#line 177 "project.y"
     {add('K');;}
     break;
 
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 170 "project.y"
+#line 193 "project.y"
     { insert_type();  ;}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 171 "project.y"
+#line 194 "project.y"
     { insert_type(); ;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 172 "project.y"
+#line 195 "project.y"
     { insert_type(); ;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 173 "project.y"
+#line 196 "project.y"
     { insert_type(); ;}
     break;
 
   case 91:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 206 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 206 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 93:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 206 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 94:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 206 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 184 "project.y"
+#line 207 "project.y"
     {strcat(exp, yytext);
 addval(y,exp);;}
     break;
@@ -1829,28 +1852,28 @@ addval(y,exp);;}
   case 97:
 
 /* Line 1455 of yacc.c  */
-#line 185 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
   case 98:
 
 /* Line 1455 of yacc.c  */
-#line 185 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
   case 99:
 
 /* Line 1455 of yacc.c  */
-#line 185 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1854 "project.tab.c"
+#line 1877 "project.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2062,36 +2085,224 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 200 "project.y"
+#line 223 "project.y"
+
+
+void printStack(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("Stack is empty\n");
+        return;
+    }
+
+    printf("Stack contents: ");
+    int i;
+    for (i = 0; i <= stack->top; ++i) {
+        printf("%lf ", stack->array[i]);
+    }
+    printf("\n");
+}
+
+// Initialize a stack
+Stack* initializeStack(int size) {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->top = -1;
+    stack->array = (double*)malloc(size * sizeof(double));
+    return stack;
+}
+
+// Check if the stack is empty
+int isEmpty(Stack* stack) {
+    return stack->top == -1;
+}
+
+// Push an element onto the stack
+void push(Stack* stack, double item) {
+    stack->array[++stack->top] = item;
+}
+
+// Pop an element from the stack
+double pop(Stack* stack) {
+    if (!isEmpty(stack)) {
+        return stack->array[stack->top--];
+    }
+    return -1; // Error: Stack is empty
+}
+
+
+void printCharStack(CharStack* stack) {
+    if (isEmptyChar(stack)) {
+        printf("Stack is empty\n");
+        return;
+    }
+
+    printf("Stack contents: ");
+    int i;
+    for (i = 0; i <= stack->top; ++i) {
+        printf("%c ", stack->array[i]);
+    }
+    printf("\n");
+}
+
+// Initialize a character stack
+CharStack* initializeCharStack(int size) {
+    CharStack* stack = (CharStack*)malloc(sizeof(CharStack));
+    stack->top = -1;
+    stack->array = (char*)malloc(size * sizeof(char));
+    return stack;
+}
+
+// Check if the character stack is empty
+int isEmptyChar(CharStack* stack) {
+    return stack->top == -1;
+}
+
+// Push a character onto the character stack
+void pushChar(CharStack* stack, char item) {
+    stack->array[++stack->top] = item;
+}
+
+// Pop a character from the character stack
+char popChar(CharStack* stack) {
+    if (!isEmptyChar(stack)) {
+        return stack->array[stack->top--];
+    }
+    return '\0'; // Error: Stack is empty
+}
+
+// Get the precedence of an operator
+int getPrecedence(char operatorr) {
+    if (operatorr == '+' || operatorr == '-')
+        return 1;
+    else if (operatorr == '*' || operatorr == '/')
+        return 2;
+    return 0; // For parentheses or other characters
+}
+
+// Convert infix expression to postfix
+void infixToPostfix(char* infix, char* postfix) {
+    CharStack* stack = initializeCharStack(strlen(infix));
+    int i, j = 0;
+
+    for (i = 0; infix[i]; ++i) {
+        if (isdigit(infix[i])) {
+            while (isdigit(infix[i])) {
+                postfix[j++] = infix[i++];
+            }
+            postfix[j++] = ' ';
+            --i;
+        } else if (infix[i] == '(') {
+            pushChar(stack, infix[i]);
+        } else if (infix[i] == ')') {
+            while (!isEmptyChar(stack) && stack->array[stack->top] != '(') {
+                postfix[j++] = popChar(stack);
+                postfix[j++] = ' ';
+            }
+            popChar(stack); // Pop the '('
+        } else if (infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/') {
+            while (!isEmptyChar(stack) && getPrecedence(infix[i]) <= getPrecedence(stack->array[stack->top])) {
+                postfix[j++] = popChar(stack);
+                postfix[j++] = ' ';
+            }
+            pushChar(stack, infix[i]);
+        }
+    }
+
+    while (!isEmptyChar(stack)) {
+        postfix[j++] = popChar(stack);
+        postfix[j++] = ' ';
+    }
+
+    postfix[j] = '\0';
+
+    free(stack->array);
+    free(stack);
+}
+
+// Function to evaluate an expression
+double evaluateExpression(char* expression) {
+    Stack* stack = initializeStack(strlen(expression));
+    int i;
+    printf("expression : %s \n", expression);
+    for (i = 0; expression[i]; ++i) {
+        if (isdigit(expression[i])) {
+            double operand = 0;
+            while (isdigit(expression[i])) {
+                operand = operand * 10 + (expression[i] - '0');
+                ++i;
+            }
+            --i;
+            push(stack, operand);
+            printf("firstOperand : %lf", operand);
+            printStack(stack);
+        } else if (expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/') {
+            double operand2 = pop(stack);
+            double operand1 = pop(stack);
+
+            printStack(stack);
+
+            switch (expression[i]) {
+                case '+':
+                    printf("%lf + %lf = %lf\n", operand1, operand2, operand1 + operand2);
+                    push(stack, operand1 + operand2);
+                    break;
+                case '-':
+                    push(stack, operand1 - operand2);
+                    break;
+                case '*':
+                    push(stack, operand1 * operand2);
+                    break;
+                case '/':
+                    if (operand2 != 0) {
+                        push(stack, operand1 / operand2);
+                    } else {
+                        printf("Error: Division by zero\n");
+                        free(stack->array);
+                        free(stack);
+                        return -1;
+                    }
+                    break;
+                printStack(stack);
+            }
+        }
+    }
+
+    double result = pop(stack);
+    printStack(stack);
+
+    printf("result : %lf\n", result);
+    if (!isEmpty(stack)) {
+        printf("Error: Malformed expression\n");
+        result = -1;
+    }
+
+    free(stack->array);
+    free(stack);
+
+    return result;
+}
 
 void insert(char * str,char *string){
   
    symbol_table[count].id_name=strdup(yytext);
    symbol_table[count].data_type=string;
 }
-double evaluateExpression(char* expression) {
-    char* endptr;  
-    printf( " %d Expression  %s : \n"  , nb_ligne , expression ) ; 
-    double result = strtod(expression, &endptr);
-    printf("%c endptr : \n" ,endptr) ;
-    // Check if the entire expression was a valid number
-    if (*endptr == '\0') {
-        return result;
-    } else {
-        // If not, print an error or handle it as needed
-        printf("Error: Malformed expression\n");
-        return -1.0; // Indicate an error
+
+void addval(int x,char * expression){
+  infixToPostfix(expression, postfixExpression);
+
+        printf("Infix Expression: %s\n", expression);
+        printf("Postfix Expression: %s\n", postfixExpression);
+
+        double result = evaluateExpression(postfixExpression);
+
+        if (result != -1) {
+            printf("Result is: %lf\n", result);
+        }
+     else {
+        printf("Error reading input\n");
     }
-}
-// flaot  to int ? 
-void addval(int x,char * str){
-  // printf('expression String' , str)
-  double result = evaluateExpression(str);
-  if (result != -1.0) {
-   printf("Result: %lf\n", result);
-  }
-  snprintf(tempStr, sizeof(tempStr), "%lf", result);
-  symbol_table[Affvar].str=strdup(tempStr);
+
+symbol_table[Affvar].ValNUm=result;
 
 }
 void insert_type() {
@@ -2141,7 +2352,6 @@ void add(char str) {
 			symbol_table[count].data_type=strdup(type);
 			symbol_table[count].line_no=nb_ligne;
 			symbol_table[count].type=strdup("Constante");      
-      symbol_table[count].ValNUm=ValNumerique;
       symbol_table[count].str="/";
 			count++;
     }
@@ -2170,7 +2380,7 @@ int search(char* name) {
    
     for (i = 0; i <= count-1; i++) {
         if (strcmp(symbol_table[i].id_name, name) == 0) {
-          if(symbol_table[i].str=="0") symbol_table[i].ValNUm='/';
+          if(symbol_table[i].str=="0") symbol_table[i].ValNUm=0;
             return i;  // Return the index of the found identifier
         }
     }
@@ -2183,7 +2393,7 @@ void afficher(){
 	printf("________________________________________________________________________________\n\n");
 	int i=0;
 	for(i=0; i<count; i++) {
-		printf("%s\t\t%s\t\t%s\t\t%d\t\t%s\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no,symbol_table[i].str);
+		printf("%s\t\t%s\t\t%s\t\t%d\t\t%lf\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no,symbol_table[i].ValNUm);
 	}
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);
