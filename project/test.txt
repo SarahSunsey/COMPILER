@@ -1,5 +1,10 @@
 int A;
-float B; 
+const float B=1.1,C=5,G=10;
+float B;
+bool F;
+const bool J = true;
 BEGIN
-A := 3 + 4  / 10 ;
+A :=  4 - 9 ;
+B := 5 + 22 + 55.5 * 10;
+F:= true;
 END

@@ -9,6 +9,7 @@ int nb_ligne=1;
 #define ANSI_COLOR_PINK    "\x1b[38;2;255;182;193m"    
 #define ANSI_COLOR_RESET   "\x1b[0m"
 extern void yyerror(const char* msg);
+char * turnEXP(char * str);
 char* endptr;
 double result;
 char tempStr[20];
@@ -303,6 +304,59 @@ char popChar(CharStack* stack) {
     return '\0'; // Error: Stack is empty
 }
 
+char * turnEXP(char * str){
+     int len = strlen(str);
+    char* resultt =(char*)malloc((2 * len + 1) * sizeof(char));
+    char * txt=(char*)malloc((2 * len + 1) * sizeof(char));
+    char* tmp = (char*)malloc((2 * len + 1) * sizeof(char)); // Maximum size after transformation
+    int i=0;
+    int s=0;
+    int nbr=1;
+    int j=0;
+   for(i=0;i<strlen(str);i++){
+    if(isdigit(str[i]) && str[i+1]!='.'){
+      
+      tmp[j]=str[i];
+      j++;
+    }
+    else if(str[i]=='+' || str[i]=='*' || str[i]=='-' || str[i]=='+'){
+      
+      tmp[j]=str[i];
+      j++;
+    }
+    else if(isdigit(str[i]) && str[i+1] == '.'){
+     
+      tmp[j]=str[i];
+      j++;
+      i=i+2;
+      nbr=1;
+      while(isdigit(str[i])){
+              tmp[j]=str[i];
+                nbr=nbr*10;
+                j++;
+                i++;
+                
+            }
+            
+            tmp[j]='/';
+            j++;
+            char nbrStr[20]; // Assuming maximum digits for an integer
+
+            
+            sprintf(nbrStr, "%d", nbr);
+            for (s = 0; s < strlen(nbrStr); s++) {
+                tmp[j] = nbrStr[s];
+                
+                j++;
+            }
+            i--;
+            
+    }
+   
+   } //printf("%s\n",tmp);
+    return tmp;
+
+}
 // Get the precedence of an operator
 int getPrecedence(char operatorr) {
     if (operatorr == '+' || operatorr == '-')
@@ -356,7 +410,7 @@ void infixToPostfix(char* infix, char* postfix) {
 double evaluateExpression(char* expression) {
     Stack* stack = initializeStack(strlen(expression));
     int i;
-    printf("expression : %s \n", expression);
+    //printf("expression : %s \n", expression);
     for (i = 0; expression[i]; ++i) {
         if (isdigit(expression[i])) {
             double operand = 0;
@@ -366,17 +420,17 @@ double evaluateExpression(char* expression) {
             }
             --i;
             push(stack, operand);
-            printf("firstOperand : %lf", operand);
-            printStack(stack);
+            //printf("firstOperand : %lf", operand);
+           // printStack(stack);
         } else if (expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/') {
             double operand2 = pop(stack);
             double operand1 = pop(stack);
 
-            printStack(stack);
+           // printStack(stack);
 
             switch (expression[i]) {
                 case '+':
-                    printf("%lf + %lf = %lf\n", operand1, operand2, operand1 + operand2);
+                    //printf("%lf + %lf = %lf\n", operand1, operand2, operand1 + operand2);
                     push(stack, operand1 + operand2);
                     break;
                 case '-':
@@ -389,21 +443,21 @@ double evaluateExpression(char* expression) {
                     if (operand2 != 0) {
                         push(stack, operand1 / operand2);
                     } else {
-                        printf("Error: Division by zero\n");
+                        //printf("Error: Division by zero\n");
                         free(stack->array);
                         free(stack);
                         return -1;
                     }
                     break;
-                printStack(stack);
+                //printStack(stack);
             }
         }
     }
 
     double result = pop(stack);
-    printStack(stack);
+    //printStack(stack);
 
-    printf("result : %lf\n", result);
+    //printf("result : %lf\n", result);
     if (!isEmpty(stack)) {
         printf("Error: Malformed expression\n");
         result = -1;
@@ -422,19 +476,15 @@ void insert(char * str,char *string){
 }
 
 void addval(int x,char * expression){
+    expression=turnEXP(expression);
+    
   infixToPostfix(expression, postfixExpression);
 
-        printf("Infix Expression: %s\n", expression);
-        printf("Postfix Expression: %s\n", postfixExpression);
-
+       
         double result = evaluateExpression(postfixExpression);
-
-        if (result != -1) {
-            printf("Result is: %lf\n", result);
-        }
-     else {
-        printf("Error reading input\n");
-    }
+ /* if (result != -1) {
+printf("Result is: %lf\n", result);}
+     else {printf("Error reading input\n");}*/
 
 symbol_table[Affvar].ValNUm=result;
 
