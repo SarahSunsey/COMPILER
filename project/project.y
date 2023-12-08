@@ -200,10 +200,10 @@ return_type :INT|FLOATVAR|CHARR|VOID|BOOLL
 COMP:lt|gt|eq|eqeq|neq 
 unary:incr|decr
 
-OP: min | pl | and | mul | orr
+OP: min | pl | and | mul | orr | divv
 VALUE: INT_NUM | FLOAT_NUM |idf |BOOL_VAL
 
-OP1: min {strcat(exp, yytext);} | pl {strcat(exp, yytext);}| and {strcat(exp, yytext);}| mul {strcat(exp, yytext);}| orr
+OP1: min {strcat(exp, yytext);} | pl {strcat(exp, yytext);}| and {strcat(exp, yytext);}| divv {strcat(exp, yytext);}| mul {strcat(exp, yytext);}
 VALUE1: INT_NUM {strcat(exp, yytext);
 addval(y,exp);}| FLOAT_NUM {strcat(exp, yytext);addval(y,exp);} |IDF {strcat(exp, yytext);addval(y,exp);}  |BOOL_VAL {strcat(exp, yytext);addval(y,exp);}
 
