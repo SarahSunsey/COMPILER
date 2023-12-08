@@ -9,6 +9,73 @@ typedef struct {
     double* array;
 } Stack;
 
+char * turnEXP(char * str){
+     int len = strlen(str);
+    char* resultt =(char*)malloc((2 * len + 1) * sizeof(char));
+    char* tmp = (char*)malloc((2 * len + 1) * sizeof(char)); // Maximum size after transformation
+    int i;
+    int j=1;
+    int k;
+    int s=0;
+    int f=0;
+    char * txt=(char*)malloc((2 * len + 1) * sizeof(char));;
+    int checkJ =0;
+    
+    int nbr;
+    for(i=0;i<strlen(str);i++){
+      
+      nbr=0;
+        if(isdigit(str[i])){
+          if(checkJ==0)
+          {tmp[i]=str[i];
+          
+          j++;
+          }
+          else
+          {
+            printf(" strln %d\n",strlen(tmp));
+            tmp[strlen(tmp)]=str[i];
+            
+        }
+        }
+        else if (str[i]=='+'){
+        
+         tmp[i]=str[i];
+         
+        }
+        else if(str[i]=='.'){
+          checkJ=1;
+            j=i+1;
+            nbr=1;
+            
+            while(isdigit(str[j])){
+              txt[s]=str[j];
+              
+                nbr=nbr*10;
+                j++;
+                i++;
+                s++;
+                
+            }
+            
+            strcat(tmp, txt);
+            txt[0] = '\0';
+            sprintf(resultt, "%d", nbr);
+            
+            
+            tmp[strlen(tmp)-1]='/';
+
+            strcat(tmp, resultt); 
+           
+            
+
+        }
+        
+    }
+    printf("\ntmp %s",tmp);
+    return tmp;
+
+}
 void printStack(Stack* stack) {
     if (isEmpty(stack)) {
         printf("Stack is empty\n");
@@ -150,7 +217,7 @@ double evaluateExpression(char* expression) {
     int i;
     printf("expression : %s \n", expression);
     for (i = 0; expression[i]; ++i) {
-        if (isdigit(expression[i])) {
+        if (isdigit(expression[i]) || expression[i]) {
             double operand = 0;
             while (isdigit(expression[i])) {
                 operand = operand * 10 + (expression[i] - '0');

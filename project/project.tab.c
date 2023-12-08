@@ -2088,79 +2088,69 @@ double evaluateExpression(char* expression) {
 
 char * turnEXP(char * str){
      int len = strlen(str);
-      char* resultt =(char*)malloc((2 * len + 1) * sizeof(char));
+    char* resultt =(char*)malloc((2 * len + 1) * sizeof(char));
+    char * txt=(char*)malloc((2 * len + 1) * sizeof(char));
     char* tmp = (char*)malloc((2 * len + 1) * sizeof(char)); // Maximum size after transformation
-    int i;
-    int j=1;
-    int k;
+    int i=0;
     int s=0;
-    int f=0;
-    char * txt=(char*)malloc((2 * len + 1) * sizeof(char));;
-    int checkJ =0;
-    
-    int nbr;
-    for(i=0;i<strlen(str);i++){
+    int nbr=1;
+    int j=0;
+   for(i=0;i<strlen(str);i++){
+    if(isdigit(str[i]) && str[i+1]!='.'){
       
-      nbr=0;
-        if(isdigit(str[i])){
-          if(checkJ==0)
-          {tmp[i]=str[i];
-          j++;
-          }
-          else
-          {
-            printf(" strln %d\n",strlen(tmp));
-            tmp[strlen(tmp)]=str[i];
-        }
-        }
-        else if (str[i]=='+'){
-         strcat(tmp, "+"); 
-        }
-        else if(str[i]=='.'){
-          checkJ=1;
-            j=i+1;
-            nbr=1;
-            
-            while(isdigit(str[j])){
-              txt[s]=str[j];
-              
+      tmp[j]=str[i];
+      j++;
+    }
+    else if(str[i]=='+'){
+      printf("+ is here %c\n",str[i-1]);
+      printf("is digit %d",isdigit(str[i+1]),isdigit(str[i+2]));
+      printf("%c , %c , %c \n",str[i],str[i+1],str[i+2]);
+      tmp[j]=str[i];
+      j++;
+    }
+    else if(isdigit(str[i]) && str[i+1] == '.'){
+     
+      tmp[j]=str[i];
+      j++;
+      i=i+2;
+      nbr=1;
+      while(isdigit(str[i])){
+              tmp[j]=str[i];
                 nbr=nbr*10;
                 j++;
                 i++;
-                s++;
                 
             }
             
-            strcat(tmp, txt);
-            txt[0] = '\0';
-            sprintf(resultt, "%d", nbr);
-            
-        
-            strcat(tmp,"/");
+            tmp[j]='/';
+            j++;
+            char nbrStr[20]; // Assuming maximum digits for an integer
 
-            strcat(tmp, resultt); 
-           
+            sprintf(nbrStr, "%d", nbr);
+            for (s = 0; s < strlen(nbrStr); s++) {
+                tmp[j] = nbrStr[s];
+                
+                j++;
+            }
+            i--;
             
-
-        }
-        
     }
-    printf("\ntmp %s",tmp);
+   
+   } printf("%s\n",tmp);
     return tmp;
-
 }
 // flaot  to int ? 
 void addval(int x,char * str){
-  // printf('expression String' , str)
+   printf('expression String' , str)
   char * expr = turnEXP(str);
- /* printf("new exp %s\n",expr);
+ printf("new exp %s\n",expr);
   double result = evaluateExpression(expr);
   if (result != -1.0) {
    printf("Result: %lf\n", result);
   }
   snprintf(tempStr, sizeof(tempStr), "%lf", result);
   symbol_table[Affvar].str=strdup(tempStr);
-*/
+
 }
 void insert_type() {
 strcpy(type, yytext);

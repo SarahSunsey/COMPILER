@@ -1,5 +1,7 @@
 float A;
 float B; 
 BEGIN
-A :=  3 + 4.46 + 2 + 3.56;
+A :=3 + 4.775 + 6.5 +5 ;
+
+
 END
