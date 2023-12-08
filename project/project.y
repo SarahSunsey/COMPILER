@@ -12,7 +12,9 @@ extern void yyerror(const char* msg);
 char* endptr;
 double result;
 char tempStr[20];
+char * turnEXP(char * str);
 double evaluateExpression(char* expression);
+int calculateMirror(int num);
 extern void insert(char* str,char* strg);
 extern char* yytext;
     void add(char);
@@ -71,11 +73,11 @@ declaration:cst  datatype declarationCNST
 |CHARR { insert_type(); } declarationCHAR
 |STRING { insert_type(); } declarationSTRING
 |INT { insert_type(); } declarationENTIER
-|FLOATVAR { insert_type(); } declarationFLOAT
+|FLOATVAR  { insert_type(); } declarationFLOAT
 |BOOLL { insert_type();  } declarationBOOL
 ;
 
-declarationCHAR: IDF virgule declarationCHAR
+declarationCHAR: IDF  virgule declarationCHAR
 |IDF pvg
 ;
 declarationSTRING:IDF virgule declarationSTRING
@@ -217,16 +219,82 @@ double evaluateExpression(char* expression) {
         return -1.0; // Indicate an error
     }
 }
+
+char * turnEXP(char * str){
+     int len = strlen(str);
+      char* resultt =(char*)malloc((2 * len + 1) * sizeof(char));
+    char* tmp = (char*)malloc((2 * len + 1) * sizeof(char)); // Maximum size after transformation
+    int i;
+    int j=1;
+    int k;
+    int s=0;
+    int f=0;
+    char * txt=(char*)malloc((2 * len + 1) * sizeof(char));;
+    int checkJ =0;
+    
+    int nbr;
+    for(i=0;i<strlen(str);i++){
+      
+      nbr=0;
+        if(isdigit(str[i])){
+          if(checkJ==0)
+          {tmp[i]=str[i];
+          j++;
+          }
+          else
+          {
+            printf(" strln %d\n",strlen(tmp));
+            tmp[strlen(tmp)]=str[i];
+        }
+        }
+        else if (str[i]=='+'){
+         strcat(tmp, "+"); 
+        }
+        else if(str[i]=='.'){
+          checkJ=1;
+            j=i+1;
+            nbr=1;
+            
+            while(isdigit(str[j])){
+              txt[s]=str[j];
+              
+                nbr=nbr*10;
+                j++;
+                i++;
+                s++;
+                
+            }
+            
+            strcat(tmp, txt);
+            txt[0] = '\0';
+            sprintf(resultt, "%d", nbr);
+            
+        
+            strcat(tmp,"/");
+
+            strcat(tmp, resultt); 
+           
+            
+
+        }
+        
+    }
+    printf("\ntmp %s",tmp);
+    return tmp;
+
+}
 // flaot  to int ? 
 void addval(int x,char * str){
   // printf('expression String' , str)
-  double result = evaluateExpression(str);
+  char * expr = turnEXP(str);
+ /* printf("new exp %s\n",expr);
+  double result = evaluateExpression(expr);
   if (result != -1.0) {
    printf("Result: %lf\n", result);
   }
   snprintf(tempStr, sizeof(tempStr), "%lf", result);
   symbol_table[Affvar].str=strdup(tempStr);
-
+*/
 }
 void insert_type() {
 strcpy(type, yytext);

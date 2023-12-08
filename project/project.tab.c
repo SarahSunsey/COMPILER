@@ -83,7 +83,9 @@ extern void yyerror(const char* msg);
 char* endptr;
 double result;
 char tempStr[20];
+char * turnEXP(char * str);
 double evaluateExpression(char* expression);
+int calculateMirror(int num);
 extern void insert(char* str,char* strg);
 extern char* yytext;
     void add(char);
@@ -114,7 +116,7 @@ extern char* yytext;
 
 
 /* Line 189 of yacc.c  */
-#line 118 "project.tab.c"
+#line 120 "project.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -203,7 +205,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 44 "project.y"
+#line 46 "project.y"
 
 int int_val;
 double double_val;
@@ -212,7 +214,7 @@ char* string;
 
 
 /* Line 214 of yacc.c  */
-#line 216 "project.tab.c"
+#line 218 "project.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -224,7 +226,7 @@ char* string;
 
 
 /* Line 264 of yacc.c  */
-#line 228 "project.tab.c"
+#line 230 "project.tab.c"
 
 #ifdef short
 # undef short
@@ -548,16 +550,16 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    63,    63,    63,    66,    67,    70,    71,    71,    72,
-      72,    73,    73,    74,    74,    75,    75,    78,    79,    81,
-      82,    84,    85,    88,    89,    93,    94,    95,   100,   103,
-     105,   107,   108,   109,   112,   113,   114,   114,   123,   125,
-     123,   127,   127,   128,   128,   129,   129,   130,   130,   130,
-     131,   132,   133,   134,   134,   135,   140,   141,   142,   143,
-     148,   149,   154,   154,   155,   157,   158,   160,   163,   164,
-     166,   170,   171,   172,   173,   177,   177,   177,   177,   177,
-     178,   178,   180,   180,   180,   180,   180,   181,   181,   181,
-     181,   183,   183,   183,   183,   183,   184,   185,   185,   185
+       0,    65,    65,    65,    68,    69,    72,    73,    73,    74,
+      74,    75,    75,    76,    76,    77,    77,    80,    81,    83,
+      84,    86,    87,    90,    91,    95,    96,    97,   102,   105,
+     107,   109,   110,   111,   114,   115,   116,   116,   125,   127,
+     125,   129,   129,   130,   130,   131,   131,   132,   132,   132,
+     133,   134,   135,   136,   136,   137,   142,   143,   144,   145,
+     150,   151,   156,   156,   157,   159,   160,   162,   165,   166,
+     168,   172,   173,   174,   175,   179,   179,   179,   179,   179,
+     180,   180,   182,   182,   182,   182,   182,   183,   183,   183,
+     183,   185,   185,   185,   185,   185,   186,   187,   187,   187
 };
 #endif
 
@@ -1599,56 +1601,56 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 63 "project.y"
+#line 65 "project.y"
     { declarationPhase  = 0 ; add('K'); ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 63 "project.y"
+#line 65 "project.y"
     { add('K'); printf("\nprogramme correct (syntaxiquement correcte)");;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 71 "project.y"
+#line 73 "project.y"
     { insert_type(); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 72 "project.y"
+#line 74 "project.y"
     { insert_type(); ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 73 "project.y"
+#line 75 "project.y"
     { insert_type(); ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 74 "project.y"
+#line 76 "project.y"
     { insert_type(); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 75 "project.y"
+#line 77 "project.y"
     { insert_type();  ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 100 "project.y"
+#line 102 "project.y"
     {
  add('V'); ;}
     break;
@@ -1656,14 +1658,14 @@ yyreduce:
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 103 "project.y"
+#line 105 "project.y"
     { add('C');strcpy(decCST,yytext);;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 105 "project.y"
+#line 107 "project.y"
     {
   handleDecCst(decCST);
 ;}
@@ -1672,35 +1674,35 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 107 "project.y"
+#line 109 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 108 "project.y"
+#line 110 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 109 "project.y"
+#line 111 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 114 "project.y"
+#line 116 "project.y"
     {;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 123 "project.y"
+#line 125 "project.y"
     {
   handleAffectation(); ;}
     break;
@@ -1708,7 +1710,7 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 125 "project.y"
+#line 127 "project.y"
     { 
     strcpy(exp,"");;}
     break;
@@ -1716,112 +1718,112 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 127 "project.y"
+#line 129 "project.y"
     {add('K');;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 128 "project.y"
+#line 130 "project.y"
     {add('K');;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 129 "project.y"
+#line 131 "project.y"
     {add('K');;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 130 "project.y"
+#line 132 "project.y"
     {add('K');;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 130 "project.y"
+#line 132 "project.y"
     {add('K');;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 134 "project.y"
+#line 136 "project.y"
     {add('K');;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 154 "project.y"
+#line 156 "project.y"
     {add('K');;}
     break;
 
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 170 "project.y"
+#line 172 "project.y"
     { insert_type();  ;}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 171 "project.y"
+#line 173 "project.y"
     { insert_type(); ;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 172 "project.y"
+#line 174 "project.y"
     { insert_type(); ;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 173 "project.y"
+#line 175 "project.y"
     { insert_type(); ;}
     break;
 
   case 91:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 185 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 185 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 93:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 185 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 94:
 
 /* Line 1455 of yacc.c  */
-#line 183 "project.y"
+#line 185 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 184 "project.y"
+#line 186 "project.y"
     {strcat(exp, yytext);
 addval(y,exp);;}
     break;
@@ -1829,28 +1831,28 @@ addval(y,exp);;}
   case 97:
 
 /* Line 1455 of yacc.c  */
-#line 185 "project.y"
+#line 187 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
   case 98:
 
 /* Line 1455 of yacc.c  */
-#line 185 "project.y"
+#line 187 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
   case 99:
 
 /* Line 1455 of yacc.c  */
-#line 185 "project.y"
+#line 187 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1854 "project.tab.c"
+#line 1856 "project.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2062,7 +2064,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 200 "project.y"
+#line 202 "project.y"
 
 void insert(char * str,char *string){
   
@@ -2083,16 +2085,82 @@ double evaluateExpression(char* expression) {
         return -1.0; // Indicate an error
     }
 }
+
+char * turnEXP(char * str){
+     int len = strlen(str);
+      char* resultt =(char*)malloc((2 * len + 1) * sizeof(char));
+    char* tmp = (char*)malloc((2 * len + 1) * sizeof(char)); // Maximum size after transformation
+    int i;
+    int j=1;
+    int k;
+    int s=0;
+    int f=0;
+    char * txt=(char*)malloc((2 * len + 1) * sizeof(char));;
+    int checkJ =0;
+    
+    int nbr;
+    for(i=0;i<strlen(str);i++){
+      
+      nbr=0;
+        if(isdigit(str[i])){
+          if(checkJ==0)
+          {tmp[i]=str[i];
+          j++;
+          }
+          else
+          {
+            printf(" strln %d\n",strlen(tmp));
+            tmp[strlen(tmp)]=str[i];
+        }
+        }
+        else if (str[i]=='+'){
+         strcat(tmp, "+"); 
+        }
+        else if(str[i]=='.'){
+          checkJ=1;
+            j=i+1;
+            nbr=1;
+            
+            while(isdigit(str[j])){
+              txt[s]=str[j];
+              
+                nbr=nbr*10;
+                j++;
+                i++;
+                s++;
+                
+            }
+            
+            strcat(tmp, txt);
+            txt[0] = '\0';
+            sprintf(resultt, "%d", nbr);
+            
+        
+            strcat(tmp,"/");
+
+            strcat(tmp, resultt); 
+           
+            
+
+        }
+        
+    }
+    printf("\ntmp %s",tmp);
+    return tmp;
+
+}
 // flaot  to int ? 
 void addval(int x,char * str){
   // printf('expression String' , str)
-  double result = evaluateExpression(str);
+  char * expr = turnEXP(str);
+ /* printf("new exp %s\n",expr);
+  double result = evaluateExpression(expr);
   if (result != -1.0) {
    printf("Result: %lf\n", result);
   }
   snprintf(tempStr, sizeof(tempStr), "%lf", result);
   symbol_table[Affvar].str=strdup(tempStr);
-
+*/
 }
 void insert_type() {
 strcpy(type, yytext);
@@ -2214,4 +2282,3 @@ int main(int argc, char *argv[]) {
    
     return 0;
 }
-
