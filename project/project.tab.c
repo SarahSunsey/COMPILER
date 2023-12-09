@@ -123,6 +123,7 @@ extern char* yytext;
         int line_no;
         double ValNUm ;
         char * str ;
+        char * boolVal ; 
         
     } symbol_table[100];
     int declarationPhase=1 ;
@@ -138,7 +139,7 @@ extern char* yytext;
 
 
 /* Line 189 of yacc.c  */
-#line 142 "project.tab.c"
+#line 143 "project.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -227,7 +228,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 68 "project.y"
+#line 69 "project.y"
 
 int int_val;
 double double_val;
@@ -236,7 +237,7 @@ char* string;
 
 
 /* Line 214 of yacc.c  */
-#line 240 "project.tab.c"
+#line 241 "project.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -248,7 +249,7 @@ char* string;
 
 
 /* Line 264 of yacc.c  */
-#line 252 "project.tab.c"
+#line 253 "project.tab.c"
 
 #ifdef short
 # undef short
@@ -573,17 +574,17 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    87,    87,    87,    90,    91,    94,    95,    95,    96,
-      96,    97,    97,    98,    98,    99,    99,   102,   103,   105,
-     106,   108,   109,   112,   113,   117,   118,   119,   124,   127,
-     129,   131,   132,   133,   136,   137,   138,   138,   147,   149,
-     147,   151,   151,   152,   152,   153,   153,   154,   154,   154,
-     155,   156,   157,   158,   158,   159,   164,   165,   166,   167,
-     172,   173,   178,   178,   179,   181,   182,   184,   187,   188,
-     190,   194,   195,   196,   197,   201,   201,   201,   201,   201,
-     202,   202,   204,   204,   204,   204,   204,   204,   205,   205,
-     205,   205,   207,   207,   207,   207,   207,   208,   209,   209,
-     209
+       0,    88,    88,    88,    91,    92,    95,    96,    96,    97,
+      97,    98,    98,    99,    99,   100,   100,   103,   104,   106,
+     107,   109,   110,   113,   114,   118,   119,   120,   125,   128,
+     130,   132,   133,   134,   137,   138,   139,   139,   148,   150,
+     148,   152,   152,   153,   153,   154,   154,   155,   155,   155,
+     156,   157,   158,   159,   159,   160,   165,   166,   167,   168,
+     173,   174,   179,   179,   180,   182,   183,   185,   188,   189,
+     191,   195,   196,   197,   198,   202,   202,   202,   202,   202,
+     203,   203,   205,   205,   205,   205,   205,   205,   206,   206,
+     206,   206,   208,   208,   208,   208,   208,   209,   210,   210,
+     210
 };
 #endif
 
@@ -1625,56 +1626,56 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 87 "project.y"
+#line 88 "project.y"
     { declarationPhase  = 0 ; add('K'); ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 87 "project.y"
+#line 88 "project.y"
     { add('K'); printf("\nprogramme correct (syntaxiquement correcte)");;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 95 "project.y"
+#line 96 "project.y"
     { insert_type(); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 96 "project.y"
+#line 97 "project.y"
     { insert_type(); ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 97 "project.y"
+#line 98 "project.y"
     { insert_type(); ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 98 "project.y"
+#line 99 "project.y"
     { insert_type(); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 99 "project.y"
+#line 100 "project.y"
     { insert_type();  ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 124 "project.y"
+#line 125 "project.y"
     {
  add('V'); ;}
     break;
@@ -1682,14 +1683,14 @@ yyreduce:
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 127 "project.y"
+#line 128 "project.y"
     { add('C');strcpy(decCST,yytext);;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 129 "project.y"
+#line 130 "project.y"
     {
   handleDecCst(decCST);
 ;}
@@ -1698,35 +1699,35 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 131 "project.y"
+#line 132 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 132 "project.y"
+#line 133 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 133 "project.y"
+#line 134 "project.y"
     {handleDecCst(decCST);;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 138 "project.y"
+#line 139 "project.y"
     {;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 147 "project.y"
+#line 148 "project.y"
     {
   handleAffectation(); ;}
     break;
@@ -1734,7 +1735,7 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 149 "project.y"
+#line 150 "project.y"
     { 
     strcpy(exp,"");;}
     break;
@@ -1742,119 +1743,119 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 151 "project.y"
+#line 152 "project.y"
     {add('K');;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 152 "project.y"
+#line 153 "project.y"
     {add('K');;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 153 "project.y"
+#line 154 "project.y"
     {add('K');;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 154 "project.y"
+#line 155 "project.y"
     {add('K');;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 154 "project.y"
+#line 155 "project.y"
     {add('K');;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 158 "project.y"
+#line 159 "project.y"
     {add('K');;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 178 "project.y"
+#line 179 "project.y"
     {add('K');;}
     break;
 
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 194 "project.y"
+#line 195 "project.y"
     { insert_type();  ;}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 195 "project.y"
+#line 196 "project.y"
     { insert_type(); ;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 196 "project.y"
+#line 197 "project.y"
     { insert_type(); ;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 197 "project.y"
+#line 198 "project.y"
     { insert_type(); ;}
     break;
 
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 207 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 93:
 
 /* Line 1455 of yacc.c  */
-#line 207 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 94:
 
 /* Line 1455 of yacc.c  */
-#line 207 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 95:
 
 /* Line 1455 of yacc.c  */
-#line 207 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 207 "project.y"
+#line 208 "project.y"
     {strcat(exp, yytext);;}
     break;
 
   case 97:
 
 /* Line 1455 of yacc.c  */
-#line 208 "project.y"
+#line 209 "project.y"
     {strcat(exp, yytext);
 addval(y,exp);;}
     break;
@@ -1862,28 +1863,28 @@ addval(y,exp);;}
   case 98:
 
 /* Line 1455 of yacc.c  */
-#line 209 "project.y"
+#line 210 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
   case 99:
 
 /* Line 1455 of yacc.c  */
-#line 209 "project.y"
+#line 210 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
   case 100:
 
 /* Line 1455 of yacc.c  */
-#line 209 "project.y"
+#line 210 "project.y"
     {strcat(exp, yytext);addval(y,exp);;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1887 "project.tab.c"
+#line 1888 "project.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2095,7 +2096,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 224 "project.y"
+#line 225 "project.y"
 
 
 void printStack(Stack* stack) {
@@ -2350,19 +2351,37 @@ void insert(char * str,char *string){
    symbol_table[count].data_type=string;
 }
 
-void addval(int x,char * expression){
-    expression=turnEXP(expression);
-    
-  infixToPostfix(expression, postfixExpression);
+const char* detectNumberType(double value) {
+    // Check if the difference between the value and its rounded version is very small
+    if (fabs(value - round(value)) < 1e-10) {
+        return "int";
+    } else {
+        return "float";
+    }
+}
 
-       
+void addval(int x, char* expression) {
+    if (strcmp(symbol_table[Affvar].data_type, "bool") == 0) {
+        // For boolean type, no need to evaluate the expression
+        printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[Affvar].data_type);
+        // Handle the assignment logic based on your requirements for boolean types
+        // You might want to check if the expression is "true" or "false"
+        symbol_table[Affvar].boolVal =strdup(expression) ;
+    } else {
+        expression = turnEXP(expression);
+        infixToPostfix(expression, postfixExpression);
+
         double result = evaluateExpression(postfixExpression);
- /* if (result != -1) {
-printf("Result is: %lf\n", result);}
-     else {printf("Error reading input\n");}*/
 
-symbol_table[Affvar].ValNUm=result;
+        printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[Affvar].data_type, detectNumberType(result));
 
+        if (strcmp(symbol_table[Affvar].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
+            printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
+        }
+
+        symbol_table[Affvar].ValNUm = result;
+         symbol_table[Affvar].boolVal = "0";
+    }
 }
 void insert_type() {
 strcpy(type, yytext);
@@ -2372,7 +2391,31 @@ strcpy(type, yytext);
 // }
 void handleDecCst(char * cst){
   q=search(cst);
+  // symbol_table[q].ValNUm=strdup(yytext);
   symbol_table[q].str=strdup(yytext);
+  char * expression  ;
+  
+  if (strcmp(symbol_table[q].data_type, "bool") == 0) {
+        // For boolean type, no need to evaluate the expression
+        printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[q].data_type);
+        // Handle the assignment logic based on your requirements for boolean types
+        // You might want to check if the expression is "true" or "false"
+        symbol_table[q].boolVal =strdup(yytext) ;
+    } else {
+        expression = turnEXP(yytext);
+        infixToPostfix(yytext, postfixExpression);
+
+        double result = evaluateExpression(postfixExpression);
+
+        printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[q].data_type, detectNumberType(result));
+
+        if (strcmp(symbol_table[q].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
+            printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
+        }
+
+        symbol_table[q].ValNUm = result;
+         symbol_table[q].boolVal = "0";
+    }
 }
 void handleAffectation(){
     
@@ -2439,7 +2482,7 @@ int search(char* name) {
    
     for (i = 0; i <= count-1; i++) {
         if (strcmp(symbol_table[i].id_name, name) == 0) {
-          if(symbol_table[i].str=="0") symbol_table[i].ValNUm=0;
+          // if(symbol_table[i].str=="0") { symbol_table[i].ValNUm=0;}
             return i;  // Return the index of the found identifier
         }
     }
@@ -2448,12 +2491,16 @@ int search(char* name) {
 
 void afficher(){
   printf("\n\n");
-	printf(ANSI_COLOR_YELLOW "\nNAME           DATATYPE         TYPE        LINE NUMBER           VALUE   \n"ANSI_COLOR_RESET);
+	printf(ANSI_COLOR_YELLOW "\nNAME           DATATYPE         TYPE        LINE NUMBER           VALUE \n"ANSI_COLOR_RESET);
 	printf("________________________________________________________________________________\n\n");
 	int i=0;
-	for(i=0; i<count; i++) {
-		printf("%s\t\t%s\t\t%s\t\t%d\t\t%lf\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no,symbol_table[i].ValNUm);
-	}
+	for (i = 0; i < count; i++) {
+    if (symbol_table[i].boolVal != NULL && strcmp(symbol_table[i].boolVal, "0") != 0) {
+        printf("%s\t\t%s\t\t%s\t\t%d\t\t%s\t\t \n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no, symbol_table[i].boolVal );
+    } else {
+        printf("%s\t\t%s\t\t%s\t\t%d\t\t%lf\t\t \n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no, symbol_table[i].ValNUm );
+    }
+  }
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);
 		free(symbol_table[i].type);

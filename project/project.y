@@ -52,6 +52,7 @@ extern char* yytext;
         int line_no;
         double ValNUm ;
         char * str ;
+        char * boolVal ; 
         
     } symbol_table[100];
     int declarationPhase=1 ;
@@ -475,19 +476,37 @@ void insert(char * str,char *string){
    symbol_table[count].data_type=string;
 }
 
-void addval(int x,char * expression){
-    expression=turnEXP(expression);
-    
-  infixToPostfix(expression, postfixExpression);
+const char* detectNumberType(double value) {
+    // Check if the difference between the value and its rounded version is very small
+    if (fabs(value - round(value)) < 1e-10) {
+        return "int";
+    } else {
+        return "float";
+    }
+}
 
-       
+void addval(int x, char* expression) {
+    if (strcmp(symbol_table[Affvar].data_type, "bool") == 0) {
+        // For boolean type, no need to evaluate the expression
+        printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[Affvar].data_type);
+        // Handle the assignment logic based on your requirements for boolean types
+        // You might want to check if the expression is "true" or "false"
+        symbol_table[Affvar].boolVal =strdup(expression) ;
+    } else {
+        expression = turnEXP(expression);
+        infixToPostfix(expression, postfixExpression);
+
         double result = evaluateExpression(postfixExpression);
- /* if (result != -1) {
-printf("Result is: %lf\n", result);}
-     else {printf("Error reading input\n");}*/
 
-symbol_table[Affvar].ValNUm=result;
+        printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[Affvar].data_type, detectNumberType(result));
 
+        if (strcmp(symbol_table[Affvar].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
+            printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
+        }
+
+        symbol_table[Affvar].ValNUm = result;
+         symbol_table[Affvar].boolVal = "0";
+    }
 }
 void insert_type() {
 strcpy(type, yytext);
@@ -497,7 +516,31 @@ strcpy(type, yytext);
 // }
 void handleDecCst(char * cst){
   q=search(cst);
+  // symbol_table[q].ValNUm=strdup(yytext);
   symbol_table[q].str=strdup(yytext);
+  char * expression  ;
+  
+  if (strcmp(symbol_table[q].data_type, "bool") == 0) {
+        // For boolean type, no need to evaluate the expression
+        printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[q].data_type);
+        // Handle the assignment logic based on your requirements for boolean types
+        // You might want to check if the expression is "true" or "false"
+        symbol_table[q].boolVal =strdup(yytext) ;
+    } else {
+        expression = turnEXP(yytext);
+        infixToPostfix(yytext, postfixExpression);
+
+        double result = evaluateExpression(postfixExpression);
+
+        printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[q].data_type, detectNumberType(result));
+
+        if (strcmp(symbol_table[q].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
+            printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
+        }
+
+        symbol_table[q].ValNUm = result;
+         symbol_table[q].boolVal = "0";
+    }
 }
 void handleAffectation(){
     
@@ -564,7 +607,7 @@ int search(char* name) {
    
     for (i = 0; i <= count-1; i++) {
         if (strcmp(symbol_table[i].id_name, name) == 0) {
-          if(symbol_table[i].str=="0") symbol_table[i].ValNUm=0;
+          // if(symbol_table[i].str=="0") { symbol_table[i].ValNUm=0;}
             return i;  // Return the index of the found identifier
         }
     }
@@ -573,12 +616,16 @@ int search(char* name) {
 
 void afficher(){
   printf("\n\n");
-	printf(ANSI_COLOR_YELLOW "\nNAME           DATATYPE         TYPE        LINE NUMBER           VALUE   \n"ANSI_COLOR_RESET);
+	printf(ANSI_COLOR_YELLOW "\nNAME           DATATYPE         TYPE        LINE NUMBER           VALUE \n"ANSI_COLOR_RESET);
 	printf("________________________________________________________________________________\n\n");
 	int i=0;
-	for(i=0; i<count; i++) {
-		printf("%s\t\t%s\t\t%s\t\t%d\t\t%lf\t\t\n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no,symbol_table[i].ValNUm);
-	}
+	for (i = 0; i < count; i++) {
+    if (symbol_table[i].boolVal != NULL && strcmp(symbol_table[i].boolVal, "0") != 0) {
+        printf("%s\t\t%s\t\t%s\t\t%d\t\t%s\t\t \n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no, symbol_table[i].boolVal );
+    } else {
+        printf("%s\t\t%s\t\t%s\t\t%d\t\t%lf\t\t \n", symbol_table[i].id_name, symbol_table[i].data_type, symbol_table[i].type, symbol_table[i].line_no, symbol_table[i].ValNUm );
+    }
+  }
 	for(i=0;i<count;i++) {
 		free(symbol_table[i].id_name);
 		free(symbol_table[i].type);
