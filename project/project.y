@@ -488,7 +488,7 @@ const char* detectNumberType(double value) {
 void addval(int x, char* expression) {
     if (strcmp(symbol_table[Affvar].data_type, "bool") == 0) {
         // For boolean type, no need to evaluate the expression
-        printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[Affvar].data_type);
+        // printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[Affvar].data_type);
         // Handle the assignment logic based on your requirements for boolean types
         // You might want to check if the expression is "true" or "false"
         symbol_table[Affvar].boolVal =strdup(expression) ;
@@ -522,7 +522,7 @@ void handleDecCst(char * cst){
   
   if (strcmp(symbol_table[q].data_type, "bool") == 0) {
         // For boolean type, no need to evaluate the expression
-        printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[q].data_type);
+        // printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[q].data_type);
         // Handle the assignment logic based on your requirements for boolean types
         // You might want to check if the expression is "true" or "false"
         symbol_table[q].boolVal =strdup(yytext) ;
@@ -532,7 +532,7 @@ void handleDecCst(char * cst){
 
         double result = evaluateExpression(postfixExpression);
 
-        printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[q].data_type, detectNumberType(result));
+        printf("%d ligne: data_type %s and result %lf type %s\n", nb_ligne, symbol_table[q].data_type, result,detectNumberType(result));
 
         if (strcmp(symbol_table[q].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
             printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
