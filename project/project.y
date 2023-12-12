@@ -86,6 +86,8 @@ char* string;
 
 
 S: declarations   BEGINN  { declarationPhase  = 0 ; add('K'); } programme ENDD   { add('K'); printf("\nprogramme correct (syntaxiquement correcte)");}
+| {printf("programme vide");}
+|BEGINN ENDD {printf("programme semi vide");}
 ;
 
 declarations: declaration declarations 
@@ -413,7 +415,7 @@ void infixToPostfix(char* infix, char* postfix) {
 double evaluateExpression(char* expression) {
     Stack* stack = initializeStack(strlen(expression));
     int i;
-    //printf("expression : %s \n", expression);
+    printf("expression : %s \n", expression);
     for (i = 0; expression[i]; ++i) {
         if (isdigit(expression[i])) {
             double operand = 0;
@@ -458,7 +460,7 @@ double evaluateExpression(char* expression) {
     }
 
     double result = pop(stack);
-    //printStack(stack);
+    printStack(stack);
 
     //printf("result : %lf\n", result);
     if (!isEmpty(stack)) {
@@ -512,13 +514,13 @@ void addval(int x, char* expression) {
              
             if(expression[i] != '+' && expression[i] != '-' && expression[i] != '*' && expression[i] != '/' && expression[i] != '.' && !isdigit(expression[i])){
                 
-                while (j < strlen(expression) && (isalpha(expression[i]) || expression[i] == '_')){
-                    
+               while (j < strlen(expression) && (isalpha(expression[i]) || expression[i] == '_')){
                     variableName[j] = expression[i];
                     j++;
                     i++;
+                    y=1;
                 }
-                i--;
+                if(y==1) i--;
                 variableName[j] = '\0'; 
                 printf("\nhere %s\n",variableName);
             // Convert a single char to a string
@@ -586,11 +588,11 @@ void handleDecCst(char * cst){
 
         expression = turnEXP(yytext);
         
-        infixToPostfix(yytext, postfixExpression);
-
+        infixToPostfix(expression, postfixExpression);
+        printf("\n exp %s \n",postfixExpression);
         double result = evaluateExpression(postfixExpression);
 
-        printf("%d ligne: data_type %s and result %lf type %s\n", nb_ligne, symbol_table[q].data_type, result,detectNumberType(result));
+        //printf("%d ligne: data_type %s and result %lf type %s\n", nb_ligne, symbol_table[q].data_type, result,detectNumberType(result));
 
         if (strcmp(symbol_table[q].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
             printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);

@@ -1,12 +1,4 @@
-const float A = 1.1;
-int AB;
-int B;
-int J;
-int K ;
+int A;
 BEGIN
-K := 17;
-J := 7;
-AB := 5;
-B:= AB + 8  + J - K;
-
+A := 3;
 END
