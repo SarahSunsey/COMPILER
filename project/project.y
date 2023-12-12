@@ -129,7 +129,9 @@ IDF2:idf{ add('C');strcpy(decCST,yytext);}
 
 VALUEcst: INT_NUM  {
   handleDecCst(decCST);
-}| FLOAT_NUM {handleDecCst(decCST);} 
+}| FLOAT_NUM {
+    printf("\n dec cst %s\n",decCST);
+    handleDecCst(decCST);} 
 |idf {handleDecCst(decCST);} 
 |BOOL_VAL{handleDecCst(decCST);}
 
@@ -320,7 +322,7 @@ char * turnEXP(char * str){
       tmp[j]=str[i];
       j++;
     }
-    else if(str[i]=='+' || str[i]=='*' || str[i]=='-' || str[i]=='+'){
+    else if(str[i]=='+' || str[i]=='*' || str[i]=='-' || str[i]=='/'){
       
       tmp[j]=str[i];
       j++;
@@ -477,6 +479,7 @@ void insert(char * str,char *string){
 }
 
 const char* detectNumberType(double value) {
+    
     // Check if the difference between the value and its rounded version is very small
     if (fabs(value - round(value)) < 1e-10) {
         return "int";
@@ -486,6 +489,13 @@ const char* detectNumberType(double value) {
 }
 
 void addval(int x, char* expression) {
+     int i,c,t;
+     int j=0;
+     char * nme = (char*)malloc((2 * 10 + 1) * sizeof(char));
+     char* variableName = (char*)malloc((100 + 1) * sizeof(char));
+      nme[0] = '\0';
+        int q=0;
+        int y;
     if (strcmp(symbol_table[Affvar].data_type, "bool") == 0) {
         // For boolean type, no need to evaluate the expression
         // printf("%d ligne: data_type %s (no evaluation for boolean type)\n", nb_ligne, symbol_table[Affvar].data_type);
@@ -493,12 +503,58 @@ void addval(int x, char* expression) {
         // You might want to check if the expression is "true" or "false"
         symbol_table[Affvar].boolVal =strdup(expression) ;
     } else {
-        expression = turnEXP(expression);
-        infixToPostfix(expression, postfixExpression);
+       
+       
+        char  tmp[100];
+        for (i=0;i<strlen(expression);i++){
+            j=0;
+            y=0;
+             
+            if(expression[i] != '+' && expression[i] != '-' && expression[i] != '*' && expression[i] != '/' && expression[i] != '.' && !isdigit(expression[i])){
+                
+                while (j < strlen(expression) && (isalpha(expression[i]) || expression[i] == '_')){
+                    
+                    variableName[j] = expression[i];
+                    j++;
+                    i++;
+                }
+                i--;
+                variableName[j] = '\0'; 
+                printf("\nhere %s\n",variableName);
+            // Convert a single char to a string
+            
+                printf("hey %s\n",nme);
+                c=search(variableName);
+                printf("%d",c);
+                if(c!=-1){
+                int written = sprintf(tmp + q, "%lf", symbol_table[c].ValNUm);
+                if (written < 0) {
+                    // Handle conversion error if needed
+                } else {
+                    q += written;
+                }  
+                }
+                else{
+                    printf("valeur du idf %s est null ;",symbol_table[c].id_name);
+                }
+            }
+            else{
+                tmp[q]=expression[i];
+                q++;
+            }
+            
+        }
+        strcpy(expression, tmp);
 
+    // Print or use the modified expression as needed
+    printf("\nModified Expression: %s\n", expression);
+        expression = turnEXP(expression);
+        
+        infixToPostfix(expression, postfixExpression);
+        printf("%s",expression);
         double result = evaluateExpression(postfixExpression);
 
-        printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[Affvar].data_type, detectNumberType(result));
+        //printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[Affvar].data_type, detectNumberType(result));
 
         if (strcmp(symbol_table[Affvar].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
             printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
@@ -527,7 +583,9 @@ void handleDecCst(char * cst){
         // You might want to check if the expression is "true" or "false"
         symbol_table[q].boolVal =strdup(yytext) ;
     } else {
+
         expression = turnEXP(yytext);
+        
         infixToPostfix(yytext, postfixExpression);
 
         double result = evaluateExpression(postfixExpression);

@@ -1,10 +1,12 @@
-int A;
-const int B=1.1,C=5,G=10;
-float B;
-bool F;
-const bool J = true;
+const float A = 1.1;
+int AB;
+int B;
+int J;
+int K ;
 BEGIN
-A :=  4.5 - 9 ;
-B := 5 + 22 + 55.5 * 10;
-F:= true;
+K := 17;
+J := 7;
+AB := 5;
+B:= AB + 8  + J - K;
+
 END
