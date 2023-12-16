@@ -400,7 +400,7 @@ void infixToPostfix(char* infix, char* postfix) {
 
 
 char* replaceStringIncrementDecrement(char* input) {
-    printf("Input: %s\n", input);
+    // printf("Input: %s\n", input);
 
     // Check if the input is valid
     if (input == NULL) {
@@ -572,7 +572,7 @@ void addval(int x, char* expression) {
         // printf("\nModified Expression: %s\n", expression);
         // printf("Executing the replace function \n") ; 
        
-        printf("Executing the replace function , result : %s \n" , expression) ; 
+        // printf("Executing the replace function , result : %s \n" , expression) ; 
         expression = turnEXP(expression);
         
         infixToPostfix(expression, postfixExpression);
