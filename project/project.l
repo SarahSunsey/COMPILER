@@ -8,11 +8,11 @@ extern YYSTYPE yylval;
 IDF [A-Z]+[A-Za-z0-9]*(_[A-Za-z0-9]+)*
 INTNUM [0-9]+
 float [-]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-commentaire "/*"([^*]|\*+[^*/])*\*+"/"
-
+commentaire "/*"[^/*]*"*/"
 
 
 %%
+{commentaire}   {}
 \".*\"      { return STR; }
 "BEGIN"         {  yylval.string=strdup(yytext); insert(yytext,"keyword");return BEGINN; }
 "FLOAT"|"float" { return FLOATVAR; }
@@ -36,7 +36,7 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 {yylval.string=strdup(yytext); insert(yytext,"idf");return idf; }}
 {INTNUM}       { yylval.int_val   = atoi(yytext); return INT_NUM;}
 {float}         {yylval.double_val = atof(yytext);  return FLOAT_NUM;}
-{commentaire}       {printf("cmt\n");return commentaire;}
+    
 
 "("     { return '('; }
 ")"     { return ')'; }
@@ -61,10 +61,6 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 "--"    { return decr; }
 "/"     { return divv; }
 ","     { return virgule; }
-
-\/\/.*   /* Ignore single-line comments */
-
-\/\*(.*\n)*.*\*\/   /* Ignore multi-line comments */
 
 [ \t]*   /* Ignore whitespace */
 

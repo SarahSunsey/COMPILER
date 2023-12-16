@@ -77,7 +77,6 @@ char* string;
 %token BEGINN aff pvg <string> idf  cst  virgule
 %token <double_val>FLOAT_NUM INT BOOLL STRING  BOOL_VAL CHARR VOID STR PRINTFF
 %token <int_val>INT_NUM  FLOATVAR real charr string BOOL_VAR
-%token commentaire seulcommentaire
 %token lt gt eq eqeq neq 
 %token pl min and mul orr 
 %token incr lteq gteq not decr divv  po pf ao af
@@ -101,20 +100,17 @@ declarations: declaration   declarations
 declaration:cst  datatype declarationCNST 
 |CHARR { insert_type(); } declarationCHAR
 |STRING { insert_type(); } declarationSTRING
-|INT { insert_type(); } declarationENTIER
+|INT { insert_type(); } declarationENTIER 
 |FLOATVAR { insert_type(); } declarationFLOAT
 |BOOLL { insert_type();  } declarationBOOL
-|cmnt
 ;
-cmnt:
-commentaire cmnt
-|commentaire
-;
+
 declarationCHAR: IDF virgule declarationCHAR
 |IDF pvg
 ;
 declarationSTRING:IDF virgule declarationSTRING
-|IDF pvg;
+|IDF pvg
+;
 // when declaring an IDF check previous IDF's on symbolic table , if it's exist so double declare
 declarationENTIER:IDF virgule declarationENTIER
 |IDF  pvg 
@@ -148,7 +144,7 @@ VALUEcst: INT_NUM  {
 // declarationBOOL handles boolean declarations.
 declarationBOOL:IDF virgule declarationBOOL
 |IDF pvg
-|IDF eq BOOL_VAL {}  pvg
+|IDF eq BOOL_VAL   pvg
 ;
 
 
@@ -165,7 +161,6 @@ IDF {
 |WHILE {add('K');} '(' condition ')' '{' programme '}'
 |DO {add('K');} '{' programme '}' WHILE{add('K');}'(' condition ')'
 | IDF {handleAffectation(1);} unary {strcpy(exp,"");} pvg
-|commentaire
 | unary IDF pvg
 |FOR  {add('K');}'(' statement pvg condition pvg statement ')' '{' programme '}'
 |programme programme
@@ -218,7 +213,7 @@ COMP:lt|gt|eq|eqeq|neq
 unary:incr{strcat(exp, yytext);
 addvalinct(y,exp);}|decr
 
-OP: min | pl | and | mul | orr | divv
+OP: min | pl | and | mul | orr | divv 
 VALUE: INT_NUM | FLOAT_NUM |idf |BOOL_VAL
 
 OP1: min {strcat(exp, yytext);} | pl {strcat(exp, yytext);}| and {strcat(exp, yytext);}| divv {strcat(exp, yytext);}| mul {strcat(exp, yytext);}
@@ -440,7 +435,7 @@ char* replaceStringIncrementDecrement(char* input) {
     // Find occurrences of "+"
     if (input[0] == '+') {
         if (input[1] == '+') {
-            printf("Affectation var %s\n", symbol_table[Affvar].id_name);
+            //printf("Affectation var %s\n", symbol_table[Affvar].id_name);
             strcat(output, symbol_table[Affvar].id_name);
             strcat(output, "+1");
             return output;

@@ -60,37 +60,35 @@
      charr = 276,
      string = 277,
      BOOL_VAR = 278,
-     commentaire = 279,
-     seulcommentaire = 280,
-     lt = 281,
-     gt = 282,
-     eq = 283,
-     eqeq = 284,
-     neq = 285,
-     pl = 286,
-     min = 287,
-     and = 288,
-     mul = 289,
-     orr = 290,
-     incr = 291,
-     lteq = 292,
-     gteq = 293,
-     not = 294,
-     decr = 295,
-     divv = 296,
-     po = 297,
-     pf = 298,
-     ao = 299,
-     af = 300,
-     ENDD = 301,
-     FOR = 302,
-     IF = 303,
-     ELSE = 304,
-     WHILE = 305,
-     DO = 306,
-     FUNCTIONN = 307,
-     NAMEFUNCTION = 308,
-     RETURN = 309
+     lt = 279,
+     gt = 280,
+     eq = 281,
+     eqeq = 282,
+     neq = 283,
+     pl = 284,
+     min = 285,
+     and = 286,
+     mul = 287,
+     orr = 288,
+     incr = 289,
+     lteq = 290,
+     gteq = 291,
+     not = 292,
+     decr = 293,
+     divv = 294,
+     po = 295,
+     pf = 296,
+     ao = 297,
+     af = 298,
+     ENDD = 299,
+     FOR = 300,
+     IF = 301,
+     ELSE = 302,
+     WHILE = 303,
+     DO = 304,
+     FUNCTIONN = 305,
+     NAMEFUNCTION = 306,
+     RETURN = 307
    };
 #endif
 
@@ -110,7 +108,7 @@ char* string;
 
 
 /* Line 1676 of yacc.c  */
-#line 114 "project.tab.h"
+#line 112 "project.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
