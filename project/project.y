@@ -12,6 +12,7 @@ extern void yyerror(const char* msg);
 char * turnEXP(char * str);
 char* endptr;
 double result;
+int errS=0;
 char tempStr[20];
 char postfixExpression[100];
 typedef struct {
@@ -85,13 +86,14 @@ char* string;
 %%
 
 
-S: declarations   BEGINN  { declarationPhase  = 0 ; add('K'); } programme ENDD   { add('K'); printf("\nprogramme correct (syntaxiquement correcte)");}
-| {printf("programme vide");}
-|BEGINN ENDD {printf("programme semi vide");}
+S:  declarations    BEGINN  { declarationPhase  = 0 ; add('K'); } programme   ENDD    { add('K'); printf("\nprogramme correct (syntaxiquement correcte)");}
+| {printf(" error : programme vide");}
+|BEGINN ENDD {printf("warning : programme semi vide");}
 ;
 
-declarations: declaration declarations 
-|declaration
+declarations: declaration   declarations 
+| declaration 
+
 ;
 
 declaration:cst  datatype declarationCNST 
@@ -100,8 +102,12 @@ declaration:cst  datatype declarationCNST
 |INT { insert_type(); } declarationENTIER
 |FLOATVAR { insert_type(); } declarationFLOAT
 |BOOLL { insert_type();  } declarationBOOL
+|cmnt
 ;
-
+cmnt:
+commentaire cmnt
+|commentaire
+;
 declarationCHAR: IDF virgule declarationCHAR
 |IDF pvg
 ;
@@ -132,7 +138,7 @@ IDF2:idf{ add('C');strcpy(decCST,yytext);}
 VALUEcst: INT_NUM  {
   handleDecCst(decCST);
 }| FLOAT_NUM {
-    printf("\n dec cst %s\n",decCST);
+    //printf("\n dec cst %s\n",decCST);
     handleDecCst(decCST);} 
 |idf {handleDecCst(decCST);} 
 |BOOL_VAL{handleDecCst(decCST);}
@@ -148,7 +154,6 @@ declarationBOOL:IDF virgule declarationBOOL
 //  printf statements, if-else constructs,
 //  while and do-while loops, unary operations, comments, and for loops.
 programme:
-// here you should check if it's a const
 IDF {
   handleAffectation(); }
   aff expression { 
@@ -160,16 +165,19 @@ IDF {
 | IDF unary pvg
 |commentaire
 | unary IDF pvg
-|FOR {add('K');}'(' statement pvg condition pvg statement ')' '{' programme '}'
+|FOR  {add('K');}'(' statement pvg condition pvg statement ')' '{' programme '}'
 |programme programme
 ;
 // statement defines different types of statements, including variable
 //  assignments and unary operations.
 statement :
-datatype IDF aff VALUE 
-| IDF aff expression1
+IDF {
+  } aff VALUE
+| IDF {
+   } aff expression1
 |IDF unary
 |unary IDF
+
 ;
 
 // condition handles conditions, including comparisons and boolean literals.
@@ -184,13 +192,14 @@ else: ELSE {add('K');} '{' programme '}'
 |
 ;
 term: expression OP1 term
+| '(' expression ')' OP1 term
 |VALUE1
 ;
 expression: term 
 ;
 
-term2: expression OP term2
-|VALUE
+term2: expression1 OP term2
+|VALUE1
 ;
 expression1: term2 
 ;
@@ -415,7 +424,7 @@ void infixToPostfix(char* infix, char* postfix) {
 double evaluateExpression(char* expression) {
     Stack* stack = initializeStack(strlen(expression));
     int i;
-    printf("expression : %s \n", expression);
+   // printf("expression : %s \n", expression);
     for (i = 0; expression[i]; ++i) {
         if (isdigit(expression[i])) {
             double operand = 0;
@@ -460,7 +469,7 @@ double evaluateExpression(char* expression) {
     }
 
     double result = pop(stack);
-    printStack(stack);
+    //printStack(stack);
 
     //printf("result : %lf\n", result);
     if (!isEmpty(stack)) {
@@ -522,12 +531,12 @@ void addval(int x, char* expression) {
                 }
                 if(y==1) i--;
                 variableName[j] = '\0'; 
-                printf("\nhere %s\n",variableName);
+                //printf("\nhere %s\n",variableName);
             // Convert a single char to a string
             
-                printf("hey %s\n",nme);
+               // printf("hey %s\n",nme);
                 c=search(variableName);
-                printf("%d",c);
+               // printf("%d",c);
                 if(c!=-1){
                 int written = sprintf(tmp + q, "%lf", symbol_table[c].ValNUm);
                 if (written < 0) {
@@ -537,7 +546,7 @@ void addval(int x, char* expression) {
                 }  
                 }
                 else{
-                    printf("valeur du idf %s est null ;",symbol_table[c].id_name);
+                   // printf("valeur du idf %s est null ;",symbol_table[c].id_name);
                 }
             }
             else{
@@ -549,17 +558,17 @@ void addval(int x, char* expression) {
         strcpy(expression, tmp);
 
     // Print or use the modified expression as needed
-    printf("\nModified Expression: %s\n", expression);
+    //printf("\nModified Expression: %s\n", expression);
         expression = turnEXP(expression);
         
         infixToPostfix(expression, postfixExpression);
-        printf("%s",expression);
+        //printf("%s",expression);
         double result = evaluateExpression(postfixExpression);
 
         //printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[Affvar].data_type, detectNumberType(result));
 
         if (strcmp(symbol_table[Affvar].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
-            printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
+           errS=1; printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
         }
 
         symbol_table[Affvar].ValNUm = result;
@@ -589,12 +598,13 @@ void handleDecCst(char * cst){
         expression = turnEXP(yytext);
         
         infixToPostfix(expression, postfixExpression);
-        printf("\n exp %s \n",postfixExpression);
+       // printf("\n exp %s \n",postfixExpression);
         double result = evaluateExpression(postfixExpression);
 
         //printf("%d ligne: data_type %s and result %lf type %s\n", nb_ligne, symbol_table[q].data_type, result,detectNumberType(result));
 
         if (strcmp(symbol_table[q].data_type, "int") == 0 && strcmp(detectNumberType(result), "float") == 0) {
+            errS=1;
             printf("%d ligne: Semantic error - assigning float to an integer\n", nb_ligne);
         }
 
@@ -612,6 +622,7 @@ void handleAffectation(){
     Affvar =q;
     // printf("%d idf exist with index %d \n" , nb_ligne ,q) ;
     if( strcmp(strdup("Constante") ,symbol_table[q].type)==0){
+      errS=1;
       printf("%d symentic error -> affectation to const "ANSI_COLOR_PINK  " %s "ANSI_COLOR_RESET " \n\n" , nb_ligne , symbol_table[q].id_name) ;
     } 
     
@@ -624,6 +635,7 @@ void add(char str) {
   
   if (q==-1) {
     if(declarationPhase ==0 && str!='K'){
+        errS=1;
       printf("%d symentic error -> idf"ANSI_COLOR_PINK  " %s "ANSI_COLOR_RESET "not declared \n\n" ,nb_ligne,yytext) ;
     }
     if(str=='V' && declarationPhase==1){
@@ -653,6 +665,7 @@ void add(char str) {
   }
   else{
     if(declarationPhase==1){
+        errS=1;
       printf("line :%d symentic error --> IDF %s already declared\n" , nb_ligne , symbol_table[q].id_name);
     }
     
@@ -676,6 +689,7 @@ int search(char* name) {
 
 void afficher(){
   printf("\n\n");
+  if(errS!=1){
 	printf(ANSI_COLOR_YELLOW "\nNAME           DATATYPE         TYPE        LINE NUMBER           VALUE \n"ANSI_COLOR_RESET);
 	printf("________________________________________________________________________________\n\n");
 	int i=0;
@@ -690,12 +704,12 @@ void afficher(){
 		free(symbol_table[i].id_name);
 		free(symbol_table[i].type);
 	}
-	printf("\n\n");
+	printf("\n\n");}
 }
 yywrap()
 {}
 void yyerror(const char* msg) {
-  fprintf(stderr, "\nError: %s ligne %d\n ", msg,nb_ligne);
+  fprintf(stderr, "\nError: %s ligne %d\n ", msg,nb_ligne-1);
 }
 int main(int argc, char *argv[]) {
     if (argc != 2) {

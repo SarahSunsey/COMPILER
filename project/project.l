@@ -36,7 +36,7 @@ commentaire "/*"([^*]|\*+[^*/])*\*+"/"
 {yylval.string=strdup(yytext); insert(yytext,"idf");return idf; }}
 {INTNUM}       { yylval.int_val   = atoi(yytext); return INT_NUM;}
 {float}         {yylval.double_val = atof(yytext);  return FLOAT_NUM;}
-{commentaire}       {return commentaire;}
+{commentaire}       {printf("cmt\n");return commentaire;}
 
 "("     { return '('; }
 ")"     { return ')'; }

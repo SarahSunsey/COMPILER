@@ -879,7 +879,7 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 39 "project.l"
-{return commentaire;}
+{printf("cmt\n");return commentaire;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
