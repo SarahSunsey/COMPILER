@@ -2,6 +2,7 @@ const float B=1.1,C=5,G=10;
 int A;
 int X;
 int I;
+
 int Y;
 int H;
 bool Verif;
