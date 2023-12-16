@@ -101,7 +101,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 70 "project.y"
+#line 72 "project.y"
 
 int int_val;
 double double_val;

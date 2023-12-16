@@ -6,7 +6,7 @@ int Y;
 int H;
 bool Verif;
 BEGIN
-/*hey*/
+I++;
 A := 3;
 /* lol */
 A := C + 4;

@@ -12,6 +12,8 @@ extern void yyerror(const char* msg);
 char * turnEXP(char * str);
 char* endptr;
 double result;
+char* replaceStringIncrementDecrement(char* input);
+void addvalinct(int x, char* expression);
 int errS=0;
 char tempStr[20];
 char postfixExpression[100];
@@ -162,7 +164,7 @@ IDF {
 | IF {add('K');}  '(' condition ')' '{' programme '}' else
 |WHILE {add('K');} '(' condition ')' '{' programme '}'
 |DO {add('K');} '{' programme '}' WHILE{add('K');}'(' condition ')'
-| IDF unary pvg
+| IDF {handleAffectation(1);} unary {strcpy(exp,"");} pvg
 |commentaire
 | unary IDF pvg
 |FOR  {add('K');}'(' statement pvg condition pvg statement ')' '{' programme '}'
@@ -213,7 +215,8 @@ BOOLL { insert_type();  }
 //  i think we do not have functions in our language !!
 return_type :INT|FLOATVAR|CHARR|VOID|BOOLL
 COMP:lt|gt|eq|eqeq|neq 
-unary:incr|decr
+unary:incr{strcat(exp, yytext);
+addvalinct(y,exp);}|decr
 
 OP: min | pl | and | mul | orr | divv
 VALUE: INT_NUM | FLOAT_NUM |idf |BOOL_VAL
@@ -236,7 +239,10 @@ RETURN VALUE pvg
 ;
 */
 %%
-
+void addvalinct(int x, char* expression){
+    char *exp =replaceStringIncrementDecrement(expression);
+    addval(x,exp);
+}
 void printStack(Stack* stack) {
     if (isEmpty(stack)) {
         printf("Stack is empty\n");
@@ -418,6 +424,36 @@ void infixToPostfix(char* infix, char* postfix) {
 
     free(stack->array);
     free(stack);
+}
+char* replaceStringIncrementDecrement(char* input) {
+    // printf("Input: %s\n", input);
+
+    // Check if the input is valid
+    if (input == NULL) {
+        return NULL;
+    }
+
+    // Initialize an empty string
+    char* output ;
+    output[0] = '\0';
+
+    // Find occurrences of "+"
+    if (input[0] == '+') {
+        if (input[1] == '+') {
+            printf("Affectation var %s\n", symbol_table[Affvar].id_name);
+            strcat(output, symbol_table[Affvar].id_name);
+            strcat(output, "+1");
+            return output;
+        }
+    } else if (input[0] == '-') {
+        if (input[1] == '-') {
+            strcat(output, symbol_table[Affvar].id_name);
+            strcat(output, "-1");
+            return output;
+        }
+    } else {
+        return input;
+    }
 }
 
 // Function to evaluate an expression
