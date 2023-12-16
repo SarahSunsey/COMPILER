@@ -8,9 +8,12 @@ int H;
 bool Verif;
 BEGIN
 I++;
+I++;
+I++;
 A := 3;
 /* lol */
 A := C + 4;
+
 Verif := true ;
 /*hey*/
 END

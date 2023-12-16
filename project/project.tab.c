@@ -2362,7 +2362,7 @@ char* replaceStringIncrementDecrement(char* input) {
     }
 
     // Initialize an empty string
-    char* output ;
+    char* output = (char*)malloc(strlen(input) * 3 + 1);
     output[0] = '\0';
 
     // Find occurrences of "+"
