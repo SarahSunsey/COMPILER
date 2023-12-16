@@ -2,4 +2,5 @@ int A;
 BEGIN
 A := 3;
 A++ ;
+A-- ; 
 END
