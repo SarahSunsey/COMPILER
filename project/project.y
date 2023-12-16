@@ -38,6 +38,7 @@ int getPrecedence(char operatorr);
 void infixToPostfix(char* infix, char* postfix);
 double evaluateExpression(char* expression);
 extern void insert(char* str,char* strg);
+char* replaceStringIncrementDecrement(char* input) ; 
 extern char* yytext;
     void add(char);
     void insert_type();
@@ -157,7 +158,8 @@ IDF {
 | IF {add('K');}  '(' condition ')' '{' programme '}' else
 |WHILE {add('K');} '(' condition ')' '{' programme '}'
 |DO {add('K');} '{' programme '}' WHILE{add('K');}'(' condition ')'
-| IDF unary pvg
+| IDF {handleAffectation() ;} unary { 
+    strcpy(exp,"");} pvg
 |commentaire
 | unary IDF pvg
 |FOR {add('K');}'(' statement pvg condition pvg statement ')' '{' programme '}'
@@ -204,7 +206,7 @@ BOOLL { insert_type();  }
 //  i think we do not have functions in our language !!
 return_type :INT|FLOATVAR|CHARR|VOID|BOOLL
 COMP:lt|gt|eq|eqeq|neq 
-unary:incr|decr
+unary:incr {strcat(exp, yytext);addval(y,exp);}|decr{strcat(exp, yytext);addval(y,exp);}
 
 OP: min | pl | and | mul | orr | divv
 VALUE: INT_NUM | FLOAT_NUM |idf |BOOL_VAL
@@ -309,58 +311,43 @@ char popChar(CharStack* stack) {
     return '\0'; // Error: Stack is empty
 }
 
-char * turnEXP(char * str){
-     int len = strlen(str);
-    char* resultt =(char*)malloc((2 * len + 1) * sizeof(char));
-    char * txt=(char*)malloc((2 * len + 1) * sizeof(char));
-    char* tmp = (char*)malloc((2 * len + 1) * sizeof(char)); // Maximum size after transformation
-    int i=0;
-    int s=0;
-    int nbr=1;
-    int j=0;
-   for(i=0;i<strlen(str);i++){
-    if(isdigit(str[i]) && str[i+1]!='.'){
-      
-      tmp[j]=str[i];
-      j++;
-    }
-    else if(str[i]=='+' || str[i]=='*' || str[i]=='-' || str[i]=='/'){
-      
-      tmp[j]=str[i];
-      j++;
-    }
-    else if(isdigit(str[i]) && str[i+1] == '.'){
-     
-      tmp[j]=str[i];
-      j++;
-      i=i+2;
-      nbr=1;
-      while(isdigit(str[i])){
-              tmp[j]=str[i];
-                nbr=nbr*10;
-                j++;
-                i++;
-                
-            }
-            
-            tmp[j]='/';
-            j++;
-            char nbrStr[20]; // Assuming maximum digits for an integer
+char *turnEXP(char *str) {
+    int len = strlen(str);
+    char *result = (char *)malloc((2 * len + 1) * sizeof(char));
 
-            
-            sprintf(nbrStr, "%d", nbr);
-            for (s = 0; s < strlen(nbrStr); s++) {
-                tmp[j] = nbrStr[s];
-                
-                j++;
-            }
-            i--;
-            
-    }
-   
-   } //printf("%s\n",tmp);
-    return tmp;
+    int i = 0, j = 0;
 
+    while (i < len) {
+        if (isdigit(str[i]) || (str[i] == '.' && isdigit(str[i + 1]))) {
+            char number[20];
+            int k = 0;
+
+            while (isdigit(str[i]) || str[i] == '.') {
+                number[k++] = str[i++];
+            }
+
+            number[k] = '\0';
+
+            double decimal = atof(number);
+            int denominator = 1;
+
+            while ((decimal * denominator) - (int)(decimal * denominator) != 0) {
+                denominator *= 10;
+            }
+
+            int numerator = decimal * denominator;
+
+            sprintf(result + j, "%d/%d", numerator, denominator);
+
+            j += strlen(result + j);
+        } else {
+            result[j++] = str[i++];
+        }
+    }
+
+    result[j] = '\0';
+
+    return result;
 }
 // Get the precedence of an operator
 int getPrecedence(char operatorr) {
@@ -377,8 +364,8 @@ void infixToPostfix(char* infix, char* postfix) {
     int i, j = 0;
 
     for (i = 0; infix[i]; ++i) {
-        if (isdigit(infix[i])) {
-            while (isdigit(infix[i])) {
+        if (isdigit(infix[i]) || infix[i] == '.') {
+            while (isdigit(infix[i]) || infix[i] == '.') {
                 postfix[j++] = infix[i++];
             }
             postfix[j++] = ' ';
@@ -409,6 +396,38 @@ void infixToPostfix(char* infix, char* postfix) {
 
     free(stack->array);
     free(stack);
+}
+
+
+char* replaceStringIncrementDecrement(char* input) {
+    printf("Input: %s\n", input);
+
+    // Check if the input is valid
+    if (input == NULL) {
+        return NULL;
+    }
+
+    // Initialize an empty string
+    char* output = (char*)malloc(strlen(input) * 3 + 1);
+    output[0] = '\0';
+
+    // Find occurrences of "+"
+    if (input[0] == '+') {
+        if (input[1] == '+') {
+            printf("Affectation var %s\n", symbol_table[Affvar].id_name);
+            strcat(output, symbol_table[Affvar].id_name);
+            strcat(output, "+1");
+            return output;
+        }
+    } else if (input[0] == '-') {
+        if (input[1] == '-') {
+            strcat(output, symbol_table[Affvar].id_name);
+            strcat(output, "-1");
+            return output;
+        }
+    } else {
+        return input;
+    }
 }
 
 // Function to evaluate an expression
@@ -491,6 +510,7 @@ const char* detectNumberType(double value) {
 }
 
 void addval(int x, char* expression) {
+     expression = replaceStringIncrementDecrement(expression) ;
      int i,c,t;
      int j=0;
      char * nme = (char*)malloc((2 * 10 + 1) * sizeof(char));
@@ -548,12 +568,15 @@ void addval(int x, char* expression) {
         }
         strcpy(expression, tmp);
 
-    // Print or use the modified expression as needed
-    printf("\nModified Expression: %s\n", expression);
+        // Print or use the modified expression as needed
+        // printf("\nModified Expression: %s\n", expression);
+        // printf("Executing the replace function \n") ; 
+       
+        printf("Executing the replace function , result : %s \n" , expression) ; 
         expression = turnEXP(expression);
         
         infixToPostfix(expression, postfixExpression);
-        printf("%s",expression);
+        printf("%s\n",expression);
         double result = evaluateExpression(postfixExpression);
 
         //printf("%d ligne: data_type %s and result type %s\n", nb_ligne, symbol_table[Affvar].data_type, detectNumberType(result));
@@ -610,7 +633,7 @@ void handleAffectation(){
     }
   else{
     Affvar =q;
-    // printf("%d idf exist with index %d \n" , nb_ligne ,q) ;
+    printf("%d idf exist with index %d \n" , nb_ligne ,q) ;
     if( strcmp(strdup("Constante") ,symbol_table[q].type)==0){
       printf("%d symentic error -> affectation to const "ANSI_COLOR_PINK  " %s "ANSI_COLOR_RESET " \n\n" , nb_ligne , symbol_table[q].id_name) ;
     } 
@@ -630,7 +653,7 @@ void add(char str) {
 			symbol_table[count].data_type=strdup(type);
 			symbol_table[count].line_no=nb_ligne;
 			symbol_table[count].type=strdup("Variable");
-      symbol_table[count].str="/";
+            symbol_table[count].str="/";
  
 			count++;
     }
