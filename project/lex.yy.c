@@ -769,7 +769,7 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 16 "project.l"
-{ return STR; }
+{yylval.string=strdup(yytext); return STR; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP

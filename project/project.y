@@ -12,6 +12,7 @@ extern void yyerror(const char* msg);
 char * turnEXP(char * str);
 char* endptr;
 double result;
+void addstr(int x, char* expression);
 char* replaceStringIncrementDecrement(char* input);
 void addvalinct(int x, char* expression);
 int errS=0;
@@ -63,7 +64,7 @@ extern char* yytext;
     int count=0;
     int q;
     int y;
-    char ValNumerique[10];
+    char ValNumerique[40];
     char type[10];
     char decCST[10];
     int Affvar=-1;
@@ -217,8 +218,9 @@ OP: min | pl | and | mul | orr | divv
 VALUE: INT_NUM | FLOAT_NUM |idf |BOOL_VAL
 
 OP1: min {strcat(exp, yytext);} | pl {strcat(exp, yytext);}| and {strcat(exp, yytext);}| divv {strcat(exp, yytext);}| mul {strcat(exp, yytext);}
-VALUE1: INT_NUM {strcat(exp, yytext);
-addval(y,exp);}| FLOAT_NUM {strcat(exp, yytext);addval(y,exp);} |IDF {strcat(exp, yytext);addval(y,exp);}  |BOOL_VAL {strcat(exp, yytext);addval(y,exp);}
+VALUE1: INT_NUM {strcat(exp, yytext); 
+addval(y,exp);}| FLOAT_NUM {strcat(exp, yytext);addval(y,exp);} |IDF {strcat(exp, yytext);addval(y,exp);}  |BOOL_VAL {strcat(exp, yytext);addval(y,exp);}|STR {
+    strcat(exp, yytext); addstr(y,exp); }
 
 /*
 function:
@@ -234,6 +236,11 @@ RETURN VALUE pvg
 ;
 */
 %%
+void addstr(int x, char* expression){
+    expression[0]=' ';
+    expression[strlen(expression)-1]=' ';
+    symbol_table[q].boolVal=strdup(expression);
+}
 void addvalinct(int x, char* expression){
     char *exp =replaceStringIncrementDecrement(expression);
     addval(x,exp);
@@ -488,7 +495,7 @@ double evaluateExpression(char* expression) {
                     if (operand2 != 0) {
                         push(stack, operand1 / operand2);
                     } else {
-                        //printf("Error: Division by zero\n");
+                        printf("Error: Division by zero ligne %d\n",nb_ligne);
                         free(stack->array);
                         free(stack);
                         return -1;

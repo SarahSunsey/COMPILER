@@ -13,7 +13,7 @@ commentaire "/*"[^/*]*"*/"
 
 %%
 {commentaire}   {}
-\".*\"      { return STR; }
+\".*\"      {yylval.string=strdup(yytext); return STR; }
 "BEGIN"         {  yylval.string=strdup(yytext); insert(yytext,"keyword");return BEGINN; }
 "FLOAT"|"float" { return FLOATVAR; }
 "BOOL"|"bool"   {return BOOLL ; }
